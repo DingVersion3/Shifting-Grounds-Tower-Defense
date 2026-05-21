@@ -1,2 +1,9 @@
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
+GRASS = "forestgreen"
+ROAD = "bisque3"
+MOUNTAIN = "azure4"
+TOWER = "tomato"
+TOWER_HEIGHT = 20
+TOWER_WIDTH = 10
+LINE_WIDTH = 2
