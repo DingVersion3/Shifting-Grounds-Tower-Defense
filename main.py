@@ -2,6 +2,7 @@ import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, TOWER_HEIGHT, TOWER_WIDTH
 from logger import log_state
 from tower import Tower
+from map import Map
 
 def main():
     pygame.init()
@@ -15,6 +16,7 @@ def main():
     towers = pygame.sprite.Group()
     Tower.containers = (updateable, drawable)
     tower = Tower(x, y, TOWER_HEIGHT, TOWER_WIDTH)
+    game_map = Map()
     while True:
         log_state()
         for event in pygame.event.get():
@@ -22,6 +24,7 @@ def main():
                 return
         updateable.update(dt)
         screen.fill("black")
+        game_map.draw(screen)
         for draws in drawable:
             draws.draw(screen)
         pygame.display.flip()
