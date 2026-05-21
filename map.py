@@ -1,6 +1,5 @@
 import pygame
-from constants import GRID_COLS, GRID_ROWS, CELL_SIZE
-import random
+from constants import GRID_COLS, GRID_ROWS
 from cell import Cell
 
 class Map():
