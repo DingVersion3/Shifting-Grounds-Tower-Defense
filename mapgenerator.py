@@ -1,7 +1,6 @@
 import pygame
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 
-class MapPlot():
+class MapGenerator():
     def __init__(self, terrain_type, color, passable, placeable):
         if hasattr(self, "containers"):
             super().__init__(self.containers)
