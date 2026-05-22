@@ -23,7 +23,8 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self, dt):
         if self.path_index > len(self.path_cells) -1:
-            return # add logic later for deleting the sprite and doing damage to player
+            self.kill()
+            return
         target = self.path_cells[self.path_index].grid_position
         dist = target - self.position
         if dist.length() > 0:
