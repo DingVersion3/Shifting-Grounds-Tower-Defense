@@ -1,5 +1,5 @@
 import pygame
-from constants import CELL_SIZE, GRASS, WATER, MOUNTAIN, ROAD
+from constants import CELL_SIZE, GRASS, WATER, MOUNTAIN, ROAD, START, END
 
 class Cell:
     def __init__(self, cell_type, grid_position):
@@ -13,8 +13,12 @@ class Cell:
             self.color = MOUNTAIN
         elif cell_type == "Water":
             self.color = WATER
+        elif cell_type == "Start":
+            self.color = START
+        elif cell_type == "End":
+            self.color = END
         elif cell_type == "Empty":
-            self.color = "black"
+            self.color = "white"
         else:
             self.color = "red"
 
