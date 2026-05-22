@@ -37,6 +37,7 @@ class MapGenerator():
         last_direction = None
         steps_taken = 0
         visited = set()
+        path_cells = []
         cell_count = 0
 
         while current_pos != end_pos: # calculate weights for each direction you can move based on the distance to the end from the start
@@ -106,6 +107,7 @@ class MapGenerator():
             cell = self.grid[int(current_pos.y)][int(current_pos.x)] 
             cell.cell_type = "Road"
             cell.color = ROAD
+            path_cells.append(cell)
             cell.cell_num = cell_count
 
             if direction == "left": # moving our position to next cell based on our directon
@@ -120,5 +122,6 @@ class MapGenerator():
             last_direction = direction
         start_cell.cell_type = "Start" # this guarntees the paths starting square to show up as green so that i can easily debug the path doing something it shouldnt
         start_cell.color = START
+        return path_cells
 
 

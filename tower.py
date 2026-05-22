@@ -1,6 +1,6 @@
 import pygame
 from towershape import TowerShape
-from constants import TOWER_COLOR, TOWER_HEIGHT, TOWER_WIDTH, LINE_WIDTH
+from constants import TOWER_COLOR
 
 
 class Tower(TowerShape):

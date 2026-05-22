@@ -4,6 +4,7 @@ from logger import log_state
 from tower import Tower
 from map import Map
 from mapgenerator import MapGenerator
+from enemy import Enemy
 
 def main():
     pygame.init()
@@ -15,11 +16,17 @@ def main():
     updateable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     towers = pygame.sprite.Group()
+    enemies = pygame.sprite.Group()
     Tower.containers = (updateable, drawable)
+    Enemy.containers = (updateable, drawable)
     tower = Tower(x, y, TOWER_HEIGHT, TOWER_WIDTH)
     game_map = Map()
     generated_map = MapGenerator(game_map.grid)
-    generated_map.generate_path()
+    path_cells = generated_map.generate_path()
+    for i, cell in enumerate(path_cells):
+        print(f"{i}: {cell.grid_position}")
+    start = path_cells[0].grid_position
+    enemy = Enemy(10, 2, start.x, start.y, 1, 10, path_cells)
     while True:
         log_state()
         for event in pygame.event.get():
