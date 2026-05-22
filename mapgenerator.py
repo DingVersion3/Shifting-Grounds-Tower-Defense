@@ -35,35 +35,38 @@ class MapGenerator():
         current_pos = start_pos
         last_direction = None
         steps_taken = 0
+        visited = set()
 
-        while current_pos != end_pos: # weights for each direction you can move
+        while current_pos != end_pos: # calculate weights for each direction you can move based on the distance to the end from the start
+            horz_dist = max(1, abs(end_pos.x - current_pos.x))
+            vert_dist = max(1, abs(end_pos.y - current_pos.y))
             if current_pos.x == 0:
                 left_weight = 0
             elif end_pos.x < current_pos.x:
-                left_weight = 25
+                left_weight = horz_dist
             else:
-                left_weight = 15
+                left_weight = vert_dist
 
             if current_pos.x == GRID_COLS - 1:
                 right_weight = 0
             elif current_pos.x < GRID_COLS - 1 and end_pos.x > current_pos.x:
-                right_weight = 25
+                right_weight = horz_dist
             else:
-                right_weight = 15
+                right_weight = vert_dist
 
             if current_pos.y == 0:
                 up_weight = 0
             elif end_pos.y < current_pos.y:
-                up_weight = 25
+                up_weight = vert_dist
             else:
-                up_weight = 15
+                up_weight = horz_dist
 
             if current_pos.y == GRID_ROWS - 1:
                 down_weight = 0
             elif current_pos.y < GRID_ROWS - 1 and end_pos.y > current_pos.y:
-                down_weight = 25
+                down_weight = vert_dist
             else:
-                down_weight = 15
+                down_weight = horz_dist
 
             if last_direction == "left": # checks the last direction moved so you cant go back to the last square you visited
                 right_weight = 0
@@ -77,25 +80,26 @@ class MapGenerator():
             if steps_taken  == 0: # counts the steps taken and chooses a new direction if you run into the end of the grid or have taken the amount of steps needed
                 steps_taken += 1
                 direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
-            elif steps_taken < 3:
+            elif steps_taken < 2:
                 steps_taken += 1
-                if last_direction == "left" and current_pos.x <= 0:
-                    steps_taken = 3
+                if last_direction == "left" and (current_pos.x <= 0 or (int(current_pos.x) - 1, int(current_pos.y)) in visited):
+                    steps_taken = 2
                     direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
-                elif last_direction == "right" and current_pos.x >= GRID_COLS - 1:
-                    steps_taken = 3
+                elif last_direction == "right" and (current_pos.x >= GRID_COLS - 1 or (int(current_pos.x) + 1, int(current_pos.y)) in visited):
+                    steps_taken = 2
                     direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
-                elif last_direction == "up" and current_pos.y <= 0:
-                    steps_taken = 3
+                elif last_direction == "up" and (current_pos.y <= 0 or (int(current_pos.x), int(current_pos.y) - 1) in visited):
+                    steps_taken = 2
                     direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
-                elif last_direction == "down" and current_pos.y >= GRID_ROWS - 1:
-                    steps_taken = 3
+                elif last_direction == "down" and (current_pos.y >= GRID_ROWS - 1 or (int(current_pos.x), int(current_pos.y) + 1) in visited):
+                    steps_taken = 2
                     direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
                 else:
                     direction = last_direction
-            elif steps_taken == 3:
+            elif steps_taken == 2:
                 steps_taken = 0
                 direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
+            visited.add((int(current_pos.y), int(current_pos.x)))
             cell = self.grid[int(current_pos.y)][int(current_pos.x)] 
             cell.cell_type = "Road"
             cell.color = ROAD
