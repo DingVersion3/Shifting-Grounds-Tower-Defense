@@ -14,7 +14,7 @@ class Shot(CircleShape):
     def draw(self, screen):
         pygame.draw.circle(screen, "white", (self.position.x * CELL_SIZE, self.position.y * CELL_SIZE), SHOT_RADIUS)
     
-    def update(self, dt, enemies=None):
+    def update(self, dt, enemies=None, player=None):
         if self.target.alive():
             direction = (self.target.position - self.position).normalize()
             self.velocity = direction * SHOT_SPEED

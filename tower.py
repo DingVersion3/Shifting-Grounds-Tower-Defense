@@ -14,7 +14,7 @@ class Tower(TowerShape):
     def draw(self, screen):
         pygame.draw.rect(screen, TOWER_COLOR, self.shape(), 0)
 
-    def update(self, dt, enemies=None):
+    def update(self, dt, enemies=None, player=None):
         self.shot_timer -= dt
         if self.shot_timer <= 0:
             for enemy in enemies:
