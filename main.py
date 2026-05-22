@@ -9,6 +9,7 @@ from wave_manager import WaveManager
 from shot import Shot
 from player import Player
 from gameover import GameOverScreen
+from ui import UIBar
 
 def main():
     pygame.init()
@@ -30,6 +31,7 @@ def main():
     start = path_cells[0].grid_position
     wave_manager = WaveManager(path_cells)
     player = Player()
+    ui_bar = UIBar(screen, player, wave_manager)
     while True:
         log_state()
         for event in pygame.event.get():
@@ -57,6 +59,7 @@ def main():
                         player.earn_money()
         screen.fill("black")
         game_map.draw(screen)
+        ui_bar.draw(screen)
         wave_manager.update(dt, updateable, drawable, enemies)
         for draws in drawable:
             draws.draw(screen)
