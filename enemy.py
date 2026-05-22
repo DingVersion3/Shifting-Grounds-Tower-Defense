@@ -21,7 +21,7 @@ class Enemy(pygame.sprite.Sprite):
     def draw(self, screen):
         pygame.draw.rect(screen, "black", self.shape(), 0)
 
-    def update(self, dt):
+    def update(self, dt, enemies=None):
         if self.path_index > len(self.path_cells) -1:
             self.kill()
             return
@@ -32,4 +32,8 @@ class Enemy(pygame.sprite.Sprite):
             self.position += move
         if dist.length() < 0.5:
             self.path_index += 1
+
+        if self.health <= 0:
+            self.kill()
+            return
 

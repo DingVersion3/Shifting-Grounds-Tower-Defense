@@ -6,6 +6,7 @@ from map import Map
 from mapgenerator import MapGenerator
 from enemy import Enemy
 from wave_manager import WaveManager
+from shot import Shot
 
 def main():
     pygame.init()
@@ -18,8 +19,10 @@ def main():
     drawable = pygame.sprite.Group()
     towers = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
     Tower.containers = (updateable, drawable)
-    tower = Tower(x, y, TOWER_HEIGHT, TOWER_WIDTH)
+    Shot.containers = (shots, updateable, drawable)
+    tower = Tower(15, 8)
     game_map = Map()
     generated_map = MapGenerator(game_map.grid)
     path_cells = generated_map.generate_path()
@@ -30,10 +33,15 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-        updateable.update(dt)
+        updateable.update(dt, enemies)
+        for enemy in enemies:
+            for shot in shots:
+                if shot.collides_with(enemy):
+                    enemy.health -= shot.damage
+                    shot.kill()
         screen.fill("black")
         game_map.draw(screen)
-        wave_manager.update(dt, updateable, drawable)
+        wave_manager.update(dt, updateable, drawable, enemies)
         for draws in drawable:
             draws.draw(screen)
         pygame.display.flip()
