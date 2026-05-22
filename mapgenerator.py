@@ -28,6 +28,7 @@ class MapGenerator():
 
         start_pos = pygame.Vector2(start_column, start_row) #declaring our start and end cells position
         start_cell = self.grid[int(start_pos.y)][int(start_pos.x)]
+        start_cell.cell_num = 0
         end_pos = pygame.Vector2(end_column, end_row)
         end_cell = self.grid[int(end_pos.y)][int(end_pos.x)]
         end_cell.cell_type = "End"
@@ -36,6 +37,7 @@ class MapGenerator():
         last_direction = None
         steps_taken = 0
         visited = set()
+        cell_count = 0
 
         while current_pos != end_pos: # calculate weights for each direction you can move based on the distance to the end from the start
             horz_dist = max(1, abs(end_pos.x - current_pos.x))
@@ -100,9 +102,11 @@ class MapGenerator():
                 steps_taken = 0
                 direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
             visited.add((int(current_pos.y), int(current_pos.x)))
+            cell_count += 1
             cell = self.grid[int(current_pos.y)][int(current_pos.x)] 
             cell.cell_type = "Road"
             cell.color = ROAD
+            cell.cell_num = cell_count
 
             if direction == "left": # moving our position to next cell based on our directon
                 current_pos.x -= 1

@@ -2,9 +2,10 @@ import pygame
 from constants import CELL_SIZE, GRASS, WATER, MOUNTAIN, ROAD, START, END
 
 class Cell:
-    def __init__(self, cell_type, grid_position):
+    def __init__(self, cell_type, grid_position, cell_num):
         self.cell_type = cell_type
         self.grid_position = grid_position
+        self.cell_num = cell_num
         if cell_type == "Grass":
             self.color = GRASS
         elif cell_type == "Road":
