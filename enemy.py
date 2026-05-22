@@ -16,7 +16,7 @@ class Enemy(pygame.sprite.Sprite):
         self.path_cells = path_cells
 
     def shape(self):
-        return pygame.Rect(self.position.x * CELL_SIZE + CELL_SIZE // 2 - 10, self.position.y * CELL_SIZE + CELL_SIZE // 2 - 5, 20, 10)
+        return pygame.Rect(self.position.x * CELL_SIZE + CELL_SIZE // 2 - 10, self.position.y * CELL_SIZE + CELL_SIZE // 2 - 5, 10, 20)
 
     def draw(self, screen):
         pygame.draw.rect(screen, "black", self.shape(), 0)
