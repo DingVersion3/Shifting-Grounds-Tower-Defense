@@ -7,6 +7,7 @@ from mapgenerator import MapGenerator
 from enemy import Enemy
 from wave_manager import WaveManager
 from shot import Shot
+from player import Player
 
 def main():
     pygame.init()
@@ -27,6 +28,7 @@ def main():
     path_cells = generated_map.generate_path()
     start = path_cells[0].grid_position
     wave_manager = WaveManager(path_cells)
+    player = Player()
     while True:
         log_state()
         for event in pygame.event.get():
@@ -39,12 +41,14 @@ def main():
                     cell = game_map.grid[tower_y][tower_x]
                     if cell.cell_type not in ("Road", "Start", "End"):
                         Tower(tower_x, tower_y)
-        updateable.update(dt, enemies)
+        updateable.update(dt, enemies, player)
         for enemy in enemies:
             for shot in shots:
                 if shot.collides_with(enemy):
                     enemy.health -= shot.damage
                     shot.kill()
+                    if enemy.health <= 0:
+                        player.earn_money()
         screen.fill("black")
         game_map.draw(screen)
         wave_manager.update(dt, updateable, drawable, enemies)

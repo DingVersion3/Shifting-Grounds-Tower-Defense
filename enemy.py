@@ -21,9 +21,10 @@ class Enemy(pygame.sprite.Sprite):
     def draw(self, screen):
         pygame.draw.rect(screen, "black", self.shape(), 0)
 
-    def update(self, dt, enemies=None):
+    def update(self, dt, enemies=None, player=None):
         if self.path_index > len(self.path_cells) -1:
             self.kill()
+            player.take_damage()
             return
         target = self.path_cells[self.path_index].grid_position
         dist = target - self.position
