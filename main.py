@@ -23,8 +23,6 @@ def main():
     game_map = Map()
     generated_map = MapGenerator(game_map.grid)
     path_cells = generated_map.generate_path()
-    for i, cell in enumerate(path_cells):
-        print(f"{i}: {cell.grid_position}")
     start = path_cells[0].grid_position
     enemy = Enemy(10, 2, start.x, start.y, 1, 10, path_cells)
     while True:

@@ -31,96 +31,51 @@ class MapGenerator():
         start_cell.cell_num = 0
         end_pos = pygame.Vector2(end_column, end_row)
         end_cell = self.grid[int(end_pos.y)][int(end_pos.x)]
-        end_cell.cell_type = "End"
-        end_cell.color = END
-        current_pos = start_pos
-        last_direction = None
-        steps_taken = 0
-        visited = set()
+        waypoints = [start_pos]
+        for _ in range(3):
+            wx = random.randint(2, GRID_COLS - 3)
+            wy = random.randint(2, GRID_ROWS - 3)
+            waypoints.append(pygame.Vector2(wx, wy))
+        waypoints.append(end_pos)
+
         path_cells = []
         cell_count = 0
+        current_pos = pygame.Vector2(start_pos.x, start_pos.y)
 
-        while current_pos != end_pos: # calculate weights for each direction you can move based on the distance to the end from the start
-            horz_dist = max(1, abs(end_pos.x - current_pos.x))
-            vert_dist = max(1, abs(end_pos.y - current_pos.y))
-            if current_pos.x == 0:
-                left_weight = 0
-            elif end_pos.x < current_pos.x:
-                left_weight = horz_dist
-            else:
-                left_weight = vert_dist
-
-            if current_pos.x == GRID_COLS - 1:
-                right_weight = 0
-            elif current_pos.x < GRID_COLS - 1 and end_pos.x > current_pos.x:
-                right_weight = horz_dist
-            else:
-                right_weight = vert_dist
-
-            if current_pos.y == 0:
-                up_weight = 0
-            elif end_pos.y < current_pos.y:
-                up_weight = vert_dist
-            else:
-                up_weight = horz_dist
-
-            if current_pos.y == GRID_ROWS - 1:
-                down_weight = 0
-            elif current_pos.y < GRID_ROWS - 1 and end_pos.y > current_pos.y:
-                down_weight = vert_dist
-            else:
-                down_weight = horz_dist
-
-            if last_direction == "left": # checks the last direction moved so you cant go back to the last square you visited
-                right_weight = 0
-            elif last_direction == "right":
-                left_weight = 0
-            elif last_direction == "up":
-                down_weight = 0
-            elif last_direction == "down":
-                up_weight = 0
-
-            if steps_taken  == 0: # counts the steps taken and chooses a new direction if you run into the end of the grid or have taken the amount of steps needed
-                steps_taken += 1
-                direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
-            elif steps_taken < 2:
-                steps_taken += 1
-                if last_direction == "left" and (current_pos.x <= 0 or (int(current_pos.x) - 1, int(current_pos.y)) in visited):
-                    steps_taken = 2
-                    direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
-                elif last_direction == "right" and (current_pos.x >= GRID_COLS - 1 or (int(current_pos.x) + 1, int(current_pos.y)) in visited):
-                    steps_taken = 2
-                    direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
-                elif last_direction == "up" and (current_pos.y <= 0 or (int(current_pos.x), int(current_pos.y) - 1) in visited):
-                    steps_taken = 2
-                    direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
-                elif last_direction == "down" and (current_pos.y >= GRID_ROWS - 1 or (int(current_pos.x), int(current_pos.y) + 1) in visited):
-                    steps_taken = 2
-                    direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
+        for i in range(len(waypoints) - 1):
+            target = waypoints[i + 1]
+            
+            while current_pos.x != target.x:
+                cell = self.grid[int(current_pos.y)][int(current_pos.x)]
+                cell.cell_type = "Road"
+                cell.color = ROAD
+                cell.cell_num = cell_count
+                path_cells.append(cell)
+                cell_count += 1
+                if current_pos.x < target.x:
+                    current_pos.x += 1
                 else:
-                    direction = last_direction
-            elif steps_taken == 2:
-                steps_taken = 0
-                direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
-            visited.add((int(current_pos.y), int(current_pos.x)))
-            cell_count += 1
-            cell = self.grid[int(current_pos.y)][int(current_pos.x)] 
-            cell.cell_type = "Road"
-            cell.color = ROAD
-            path_cells.append(cell)
-            cell.cell_num = cell_count
+                    current_pos.x -= 1
 
-            if direction == "left": # moving our position to next cell based on our directon
-                current_pos.x -= 1
-            elif direction == "right":
-                current_pos.x += 1
-            elif direction == "up":
-                current_pos.y -= 1
-            elif direction == "down":
-                current_pos.y += 1
+            while current_pos.y != target.y:
+                cell = self.grid[int(current_pos.y)][int(current_pos.x)]
+                cell.cell_type = "Road"
+                cell.color = ROAD
+                cell.cell_num = cell_count
+                path_cells.append(cell)
+                cell_count += 1
+                if current_pos.y < target.y:
+                    current_pos.y += 1
+                else:
+                    current_pos.y -= 1
 
-            last_direction = direction
-        start_cell.cell_type = "Start" # this guarntees the paths starting square to show up as green so that i can easily debug the path doing something it shouldnt
+        cell = self.grid[int(end_pos.y)][int(end_pos.x)]
+        cell.cell_type = "End"
+        cell.color = END
+        cell.cell_num = cell_count
+        path_cells.append(cell)
+
+        start_cell.cell_type = "Start"
         start_cell.color = START
         return path_cells
 
