@@ -65,6 +65,18 @@ class MapGenerator():
                 down_weight = 10
 
             direction = random.choices(["left", "right", "up", "down"], weights=[left_weight, right_weight, up_weight, down_weight])[0]
+            cell = self.grid[int(current_pos.y)][int(current_pos.x)]
+            cell.cell_type = "Road"
+            cell.color = ROAD
+
+            if direction == "left":
+                current_pos.x -= 1
+            elif direction == "right":
+                current_pos.x += 1
+            elif direction == "up":
+                current_pos.y -= 1
+            elif direction == "down":
+                current_pos.y += 1
 
 
 

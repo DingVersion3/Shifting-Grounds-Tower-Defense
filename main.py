@@ -3,6 +3,7 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT, TOWER_HEIGHT, TOWER_WIDTH
 from logger import log_state
 from tower import Tower
 from map import Map
+from mapgenerator import MapGenerator
 
 def main():
     pygame.init()
@@ -17,6 +18,8 @@ def main():
     Tower.containers = (updateable, drawable)
     tower = Tower(x, y, TOWER_HEIGHT, TOWER_WIDTH)
     game_map = Map()
+    generated_map = MapGenerator(game_map.grid)
+    generated_map.generate_path()
     while True:
         log_state()
         for event in pygame.event.get():
