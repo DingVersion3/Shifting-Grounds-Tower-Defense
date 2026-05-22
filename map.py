@@ -10,7 +10,7 @@ class Map():
         for row in range(self.rows):
             row_list = []
             for column in range(self.columns):
-                new_cell = Cell("Water", pygame.Vector2(column, row))
+                new_cell = Cell("Grass", pygame.Vector2(column, row))
                 new_cell.cell_num = -1
                 row_list.append(new_cell)
             self.grid.append(row_list)

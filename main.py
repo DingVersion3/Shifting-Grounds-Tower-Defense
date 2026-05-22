@@ -36,7 +36,9 @@ def main():
                 if event.button == 1:
                     tower_x = event.pos[0] // CELL_SIZE
                     tower_y = event.pos[1] // CELL_SIZE
-                    Tower(tower_x, tower_y)
+                    cell = game_map.grid[tower_y][tower_x]
+                    if cell.cell_type not in ("Road", "Start", "End"):
+                        Tower(tower_x, tower_y)
         updateable.update(dt, enemies)
         for enemy in enemies:
             for shot in shots:
