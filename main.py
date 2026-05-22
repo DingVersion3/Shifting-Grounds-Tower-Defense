@@ -8,6 +8,7 @@ from enemy import Enemy
 from wave_manager import WaveManager
 from shot import Shot
 from player import Player
+from gameover import GameOverScreen
 
 def main():
     pygame.init()
@@ -42,6 +43,11 @@ def main():
                     if cell.cell_type not in ("Road", "Start", "End"):
                         Tower(tower_x, tower_y)
         updateable.update(dt, enemies, player)
+        if player.health <= 0:
+            result = GameOverScreen(screen, wave_manager.wave_num).display()
+            if result == "RESTART":
+                main()
+            return
         for enemy in enemies:
             for shot in shots:
                 if shot.collides_with(enemy):
