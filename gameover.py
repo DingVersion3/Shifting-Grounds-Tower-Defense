@@ -1,4 +1,5 @@
 import pygame
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class GameOverScreen():
     def __init__(self, screen, wave_num):
@@ -12,8 +13,10 @@ class GameOverScreen():
             self.screen.fill((0, 0, 0))
             title = self.font.render('GAME OVER', True, (255, 0 , 0))
             wave_num_text = self.font.render(f'Wave Number: {self.wave_num}', True, (255, 0, 0))
-            self.screen.blit(title, (200, 150))
-            self.screen.blit(wave_num_text, (250, 250))
+            title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100))
+            wave_rect = wave_num_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.screen.blit(title, title_rect)
+            self.screen.blit(wave_num_text, wave_rect)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
