@@ -1,5 +1,5 @@
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, TOWER_HEIGHT, TOWER_WIDTH
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE
 from logger import log_state
 from tower import Tower
 from map import Map
@@ -22,7 +22,6 @@ def main():
     shots = pygame.sprite.Group()
     Tower.containers = (updateable, drawable)
     Shot.containers = (shots, updateable, drawable)
-    tower = Tower(15, 8)
     game_map = Map()
     generated_map = MapGenerator(game_map.grid)
     path_cells = generated_map.generate_path()
@@ -33,6 +32,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    tower_x = event.pos[0] // CELL_SIZE
+                    tower_y = event.pos[1] // CELL_SIZE
+                    Tower(tower_x, tower_y)
         updateable.update(dt, enemies)
         for enemy in enemies:
             for shot in shots:

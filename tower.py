@@ -21,7 +21,6 @@ class Tower(TowerShape):
                 target = enemy.position
                 dist = target - self.position
                 if dist.length() <= self.attack_range:
-                    print(f"firing shot at {enemy.position}")
                     Shot(self.position.x, self.position.y, SHOT_RADIUS, enemy.position, enemy, self.damage)
                     self.shot_timer = self.fire_rate
                     break
