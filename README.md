@@ -2,7 +2,7 @@
 A procedurally generated tower defense game built with Python and Pygame
 The natural build order would be something like:
 
-1. Grid system — drawable map with a defined path from start to end ✅ (still needs to be polished)
+1. Grid system — drawable map with a defined path from start to end ✅ (still needs to be polished, if thats even possible with my current implementations)
 2. Enemy waves — enemies that follow the path, with health and speed ❌
 3. Towers — placeable on non-path tiles, with range and attack logic ❌
 4. Projectiles — towers targeting and shooting nearest enemy in range ❌
