@@ -7,12 +7,13 @@ from shot import Shot
 class JTTower(TowerShape):
     def __init__(self, x, y, attack_range=4, fire_rate=3, shot_timer=3, damage=15):
         super().__init__(x, y, attack_range, fire_rate, shot_timer, damage)
+        self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile249.png"), (CELL_SIZE, CELL_SIZE))
 
     def shape(self):
         return pygame.Rect(self.position.x * CELL_SIZE, self.position.y * CELL_SIZE, self.width, self.height)
     
     def draw(self, screen):
-        pygame.draw.rect(screen, JT_TOWER_COLOR, self.shape(), 0)
+        screen.blit(self.image, self.shape())
 
     def update(self, dt, enemies=None, player=None):
         self.shot_timer -= dt
