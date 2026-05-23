@@ -7,6 +7,6 @@ The natural build order would be something like:
 3. Towers — placeable on non-path tiles, with range and attack logic ✅
 4. Projectiles — towers targeting and shooting nearest enemy in range ✅
 5. Game loop — lives✅, money✅, wave counter✅, game over screen ✅
-6. 2-3 tower types — e.g. basic, slow, splash damage ❌
-7. 2-3 enemy types — e.g. fast/weak, slow/tanky, armored ❌(same enemy type throughout just increase the difficulty as wave numbers increase)
-8. UI — tower selection panel, sell/upgrade towers ❌
+6. 2-3 tower types — e.g. basic, slow, splash damage ✅ need to finish changing values for reloads, etc. splash damage function for jttowers
+7. 2-3 enemy types — e.g. fast/weak, slow/tanky, armored  ✅(same enemy type throughout just increase the difficulty as wave numbers increase)
+8. UI — tower selection panel, sell/upgrade towers  ✅(upgrades not implementated)
