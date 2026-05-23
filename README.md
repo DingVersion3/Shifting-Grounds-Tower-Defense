@@ -16,8 +16,8 @@ Every game generates a new map with a unique path for enemies to follow, so no t
 ## Tower Types
 
 - **Basic Tower (100g)** — balanced damage and fire rate
-- **JT Tower (2,000g)** — splash damage, hits all enemies in range
-- **Laser Tower (10,000g)** — fast fire rate, high damage, save up for these
+- **JT Tower (10,000g)** — splash damage, hits all enemies in range
+- **Laser Tower (100,000g)** — fast fire rate, high damage, save up for these
 
 ## Setup
 
