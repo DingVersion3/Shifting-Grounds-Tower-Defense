@@ -1,6 +1,6 @@
 import pygame
 from towershape import TowerShape
-from constants import JT_TOWER_COLOR, CELL_SIZE, SHOT_RADIUS
+from constants import CELL_SIZE, SHOT_RADIUS
 from shot import Shot
 
 

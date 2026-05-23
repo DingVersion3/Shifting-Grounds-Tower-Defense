@@ -1,12 +1,6 @@
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 UI_COLOR = "azure4"
-TOWER_COLOR = "tomato"
-JT_TOWER_COLOR = "deeppink"
-LASER_TOWER_COLOR = "gray0"
-WATER = "steelblue"
-START = "green"
-END = "red"
 TOWER_HEIGHT = 60
 TOWER_WIDTH = 30
 LINE_WIDTH = 2
