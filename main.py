@@ -76,6 +76,11 @@ def main():
         wave_manager.update(dt, updateable, drawable, enemies)
         for draws in drawable:
             draws.draw(screen)
+        if selected_tower is not None:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            preview_x = (mouse_x // CELL_SIZE) * CELL_SIZE
+            preview_y = (mouse_y // CELL_SIZE) * CELL_SIZE
+            pygame.draw.rect(screen, (255, 255, 255, 128), (preview_x, preview_y, CELL_SIZE, CELL_SIZE), 2)
         pygame.display.flip()
         dt = fps.tick(60) / 1000
 
