@@ -3,7 +3,7 @@ import pygame
 class Player:
     def __init__(self, wave_manager):
         self.health = 3
-        self.money = 2000000
+        self.money = 200
         self.wave_manager = wave_manager
 
     def earn_money(self):
