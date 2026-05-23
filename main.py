@@ -72,7 +72,7 @@ def main():
                         player.earn_money()
         screen.fill("black")
         game_map.draw(screen)
-        ui_bar.draw(screen)
+        ui_bar.draw(screen, selected_tower)
         wave_manager.update(dt, updateable, drawable, enemies)
         for draws in drawable:
             draws.draw(screen)
