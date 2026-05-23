@@ -1,7 +1,5 @@
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
-GRASS = "forestgreen"
-ROAD = "bisque3"
 UI_COLOR = "azure4"
 TOWER_COLOR = "tomato"
 JT_TOWER_COLOR = "deeppink"

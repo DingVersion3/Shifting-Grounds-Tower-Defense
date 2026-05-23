@@ -30,7 +30,7 @@ def main():
     generated_map = MapGenerator(game_map.grid)
     path_cells = generated_map.generate_path()
     wave_manager = WaveManager(path_cells)
-    player = Player()
+    player = Player(wave_manager)
     ui_bar = UIBar(screen, player, wave_manager)
     selected_tower = None
     while True:

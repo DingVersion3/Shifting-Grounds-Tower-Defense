@@ -1,6 +1,6 @@
 import pygame
 from map import Map
-from constants import GRID_COLS, GRID_ROWS, ROAD, START, END
+from constants import GRID_COLS, GRID_ROWS, START, END
 import random
 
 class MapGenerator():
@@ -47,8 +47,7 @@ class MapGenerator():
             
             while current_pos.x != target.x:
                 cell = self.grid[int(current_pos.y)][int(current_pos.x)]
-                cell.cell_type = "Road"
-                cell.color = ROAD
+                cell.set_type("Road")
                 cell.cell_num = cell_count
                 path_cells.append(cell)
                 cell_count += 1
@@ -59,8 +58,7 @@ class MapGenerator():
 
             while current_pos.y != target.y:
                 cell = self.grid[int(current_pos.y)][int(current_pos.x)]
-                cell.cell_type = "Road"
-                cell.color = ROAD
+                cell.set_type("Road")
                 cell.cell_num = cell_count
                 path_cells.append(cell)
                 cell_count += 1
@@ -70,13 +68,11 @@ class MapGenerator():
                     current_pos.y -= 1
 
         cell = self.grid[int(end_pos.y)][int(end_pos.x)]
-        cell.cell_type = "End"
-        cell.color = END
+        cell.set_type("End")
         cell.cell_num = cell_count
         path_cells.append(cell)
 
-        start_cell.cell_type = "Start"
-        start_cell.color = START
+        start_cell.set_type("Start")
         return path_cells
 
 

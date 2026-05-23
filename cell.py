@@ -1,28 +1,32 @@
 import pygame
-from constants import CELL_SIZE, GRASS, WATER, ROAD, START, END
+from constants import CELL_SIZE
 
 class Cell:
     def __init__(self, cell_type, grid_position, cell_num=-1):
         self.cell_type = cell_type
         self.grid_position = grid_position
         self.cell_num = cell_num
-        if cell_type == "Grass":
-            self.color = GRASS
-        elif cell_type == "Road":
-            self.color = ROAD
-        elif cell_type == "Water":
-            self.color = WATER
-        elif cell_type == "Start":
-            self.color = START
-        elif cell_type == "End":
-            self.color = END
-        elif cell_type == "Empty":
-            self.color = "white"
-        else:
-            self.color = "red"
+        self._load_image()
 
     def shape(self):
         return pygame.Rect(self.grid_position.x * CELL_SIZE, self.grid_position.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
     
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, self.shape(), 0)
+        if hasattr(self, 'image'):
+            screen.blit(self.image, self.shape())
+        else:
+            pygame.draw.rect(screen, "red", self.shape(), 0)
+
+    def set_type(self, cell_type):
+        self.cell_type = cell_type
+        self._load_image()
+
+    def _load_image(self):
+        if self.cell_type == "Grass":
+            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile024.png"), (CELL_SIZE, CELL_SIZE))
+        elif self.cell_type == "Road":
+            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile093.png"), (CELL_SIZE, CELL_SIZE))
+        elif self.cell_type == "Start":
+            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile040.png"), (CELL_SIZE, CELL_SIZE))
+        elif self.cell_type == "End":
+            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile017.png"), (CELL_SIZE, CELL_SIZE))
