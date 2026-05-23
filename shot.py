@@ -20,6 +20,9 @@ class Shot(CircleShape):
     
     def update(self, dt, enemies=None, player=None):
         if self.target.alive():
-            direction = (self.target.position - self.position).normalize()
-            self.velocity = direction * SHOT_SPEED
-        self.position += self.velocity *dt
+            direction = self.target.position - self.position
+            if direction.length() > 0:
+                direction = direction.normalize()
+                self.velocity = direction * SHOT_SPEED
+                
+        self.position += self.velocity * dt
