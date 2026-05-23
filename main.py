@@ -18,11 +18,8 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     fps = pygame.time.Clock()
     dt = 0.0
-    x = SCREEN_WIDTH / 2
-    y = SCREEN_HEIGHT / 2
     updateable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
-    towers = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
     shots = pygame.sprite.Group()
     JTTower.containers = (updateable, drawable)
@@ -32,7 +29,6 @@ def main():
     game_map = Map()
     generated_map = MapGenerator(game_map.grid)
     path_cells = generated_map.generate_path()
-    start = path_cells[0].grid_position
     wave_manager = WaveManager(path_cells)
     player = Player()
     ui_bar = UIBar(screen, player, wave_manager)
