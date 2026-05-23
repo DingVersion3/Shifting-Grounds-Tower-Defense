@@ -4,8 +4,8 @@ from constants import JT_TOWER_COLOR, CELL_SIZE, SHOT_RADIUS
 from shot import Shot
 
 
-class Tower(TowerShape):
-    def __init__(self, x, y, attack_range=10, fire_rate=1, shot_timer=2, damage=2):
+class JTTower(TowerShape):
+    def __init__(self, x, y, attack_range=8, fire_rate=3, shot_timer=3, damage=15):
         super().__init__(x, y, attack_range, fire_rate, shot_timer, damage)
 
     def shape(self):
@@ -23,4 +23,3 @@ class Tower(TowerShape):
                 if dist.length() <= self.attack_range:
                     Shot(self.position.x, self.position.y, SHOT_RADIUS, enemy.position, enemy, self.damage)
                     self.shot_timer = self.fire_rate
-                    break

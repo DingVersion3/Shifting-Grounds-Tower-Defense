@@ -4,8 +4,8 @@ from constants import LASER_TOWER_COLOR, CELL_SIZE, SHOT_RADIUS
 from shot import Shot
 
 
-class Tower(TowerShape):
-    def __init__(self, x, y, attack_range=10, fire_rate=1, shot_timer=2, damage=2):
+class LaserTower(TowerShape):
+    def __init__(self, x, y, attack_range=15, fire_rate=0.2, shot_timer=0.2, damage=10):
         super().__init__(x, y, attack_range, fire_rate, shot_timer, damage)
 
     def shape(self):
