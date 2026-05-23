@@ -5,7 +5,7 @@ from shot import Shot
 
 
 class Tower(TowerShape):
-    def __init__(self, x, y, attack_range=10, fire_rate=1, shot_timer=2, damage=2):
+    def __init__(self, x, y, attack_range=5, fire_rate=1, shot_timer=2, damage=3):
         super().__init__(x, y, attack_range, fire_rate, shot_timer, damage)
 
     def shape(self):

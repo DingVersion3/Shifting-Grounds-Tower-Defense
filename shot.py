@@ -12,7 +12,7 @@ class Shot(CircleShape):
 
 
     def draw(self, screen):
-        pygame.draw.circle(screen, "white", (self.position.x * CELL_SIZE, self.position.y * CELL_SIZE), SHOT_RADIUS)
+        pygame.draw.circle(screen, "white", (self.position.x * CELL_SIZE, self.position.y * CELL_SIZE), self.radius)
     
     def update(self, dt, enemies=None, player=None):
         if self.target.alive():
