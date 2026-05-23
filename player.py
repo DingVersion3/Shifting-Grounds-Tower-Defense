@@ -3,7 +3,7 @@ import pygame
 class Player:
     def __init__(self):
         self.health = 3
-        self.money = 0
+        self.money = 100
 
     def earn_money(self):
         self.money += 100
