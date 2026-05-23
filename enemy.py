@@ -14,12 +14,13 @@ class Enemy(pygame.sprite.Sprite):
         self.path_index = path_index
         self.damage = damage
         self.path_cells = path_cells
+        self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile248.png"), (CELL_SIZE, CELL_SIZE))
 
     def shape(self):
-        return pygame.Rect(self.position.x * CELL_SIZE + CELL_SIZE // 2 - 10, self.position.y * CELL_SIZE + CELL_SIZE // 2 - 5, 10, 20)
+        return pygame.Rect(self.position.x * CELL_SIZE, self.position.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
 
     def draw(self, screen):
-        pygame.draw.rect(screen, "black", self.shape(), 0)
+        screen.blit(self.image, self.shape())
 
     def update(self, dt, enemies=None, player=None):
         if self.path_index > len(self.path_cells) -1:
