@@ -1,7 +1,9 @@
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, UI_BAR_HEIGHT
 from logger import log_state
 from tower import Tower
+from jt_tower import JTTower
+from lasertower import LaserTower
 from map import Map
 from mapgenerator import MapGenerator
 from enemy import Enemy
@@ -23,6 +25,8 @@ def main():
     towers = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
     shots = pygame.sprite.Group()
+    JTTower.containers = (updateable, drawable)
+    LaserTower.containers = (updateable, drawable)
     Tower.containers = (updateable, drawable)
     Shot.containers = (shots, updateable, drawable)
     game_map = Map()
@@ -32,6 +36,7 @@ def main():
     wave_manager = WaveManager(path_cells)
     player = Player()
     ui_bar = UIBar(screen, player, wave_manager)
+    selected_tower = None
     while True:
         log_state()
         for event in pygame.event.get():
@@ -39,11 +44,20 @@ def main():
                 return
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    tower_x = event.pos[0] // CELL_SIZE
-                    tower_y = event.pos[1] // CELL_SIZE
-                    cell = game_map.grid[tower_y][tower_x]
-                    if cell.cell_type not in ("Road", "Start", "End"):
-                        Tower(tower_x, tower_y)
+                    if event.pos[1] > SCREEN_HEIGHT - UI_BAR_HEIGHT:
+                        selected_tower = ui_bar.handle_click(event.pos)
+                    else:
+                        if selected_tower is not None:
+                            tower_x = event.pos[0] // CELL_SIZE
+                            tower_y = event.pos[1] // CELL_SIZE
+                            cell = game_map.grid[tower_y][tower_x]
+                            if cell.cell_type not in ("Road", "Start", "End"):
+                                if selected_tower == "basic":
+                                    Tower(tower_x, tower_y)
+                                elif selected_tower == "jt":
+                                    JTTower(tower_x, tower_y)
+                                elif selected_tower == "laser":
+                                    LaserTower(tower_x, tower_y)
         updateable.update(dt, enemies, player)
         if player.health <= 0:
             result = GameOverScreen(screen, wave_manager.wave_num).display()
