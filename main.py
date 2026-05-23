@@ -51,12 +51,12 @@ def main():
                                 if selected_tower == "basic" and player.money >= 100:
                                     Tower(tower_x, tower_y)
                                     player.money -= 100
-                                elif selected_tower == "jt" and player.money >= 2000:
+                                elif selected_tower == "jt" and player.money >= 10000:
                                     JTTower(tower_x, tower_y)
-                                    player.money -= 2000
-                                elif selected_tower == "laser" and player.money >= 10000:
-                                    LaserTower(tower_x, tower_y)
                                     player.money -= 10000
+                                elif selected_tower == "laser" and player.money >= 100000:
+                                    LaserTower(tower_x, tower_y)
+                                    player.money -= 100000
         updateable.update(dt, enemies, player)
         if player.health <= 0:
             result = GameOverScreen(screen, wave_manager.wave_num).display()
