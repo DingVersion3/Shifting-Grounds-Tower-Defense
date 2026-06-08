@@ -7,7 +7,7 @@ class Player:
         self.wave_manager = wave_manager
 
     def earn_money(self):
-        self.money += 15 * self.wave_manager.wave_num
+        self.money += 8 + self.wave_manager.wave_num
 
 
     def take_damage(self):

@@ -21,8 +21,9 @@ class WaveManager():
             self.enemy_remain -= 1
             start = self.path_cells[0].grid_position
             Enemy.containers = (updateable, drawable, enemies)
-            enemy_health = 10 * self.wave_num
-            enemy = Enemy(enemy_health, 2, start.x, start.y, 1, 1, self.path_cells)
+            enemy_health = 10 + (self.wave_num ** 1.7 * 3)
+            enemy_speed = 2 + (self.wave_num * 0.2)
+            enemy = Enemy(enemy_health, enemy_speed, start.x, start.y, 1, 1, self.path_cells)
         if self.enemy_remain <= 0:
             self.inbetween_waves = True
             self.next_wave_countdown -= dt
@@ -31,7 +32,7 @@ class WaveManager():
                 self.enemy_num_spawn = 0
                 self.enemy_remain = 10 + (self.wave_num * 2)
                 self.next_wave_countdown = max(2, 10 - self.wave_num)
-                self.spawn_timer = max(1, 2 - (self.wave_num * 0.1))
+                self.spawn_timer = max(0.5, 2 - (self.wave_num * 0.1))
                 self.inbetween_waves = False
 
 
