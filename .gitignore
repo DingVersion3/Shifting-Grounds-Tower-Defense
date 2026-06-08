@@ -5,3 +5,4 @@ __pycache__/
 .env
 game_state.jsonl
 *:Zone.Identifier
+venv/
