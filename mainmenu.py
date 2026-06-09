@@ -42,6 +42,7 @@ class MenuButton():
 class MainMenu():
     def __init__(self, screen):
         self.screen = screen
+        self.background = pygame.transform.scale(pygame.image.load("assets/menu.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
         
         # Explicit font check fallback system prevents text object crashing
         try:
@@ -69,10 +70,10 @@ class MainMenu():
     def display(self):
         while self.running:
             self.clock.tick(60) # Limits resource drain while stuck inside main menu execution context
-            self.screen.fill((0, 0, 0))
+            self.screen.blit(self.background, (0, 0))
             
             title = self.font.render('Shifting Grounds Tower Defense', True, (255, 255, 255))
-            title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100))
+            title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 200))
             self.screen.blit(title, title_rect)
             
             mouse_pos = pygame.mouse.get_pos()
