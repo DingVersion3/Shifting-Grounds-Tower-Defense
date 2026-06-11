@@ -17,10 +17,7 @@ class Enemy(pygame.sprite.Sprite):
         self.path_cells = path_cells
         
         # Store unrotated base image
-        self.original_image = pygame.transform.scale(
-            pygame.image.load("assets/towerDefense_tile248.png").convert_alpha(), 
-            (CELL_SIZE, CELL_SIZE)
-        )
+        self.original_image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile248.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
         self.image = self.original_image
         self.angle = 0
 
@@ -28,8 +25,7 @@ class Enemy(pygame.sprite.Sprite):
         # Center the rect on your fine-grained vector position
         # Multiplying vector positions by CELL_SIZE ensures smooth, sub-pixel rendering
         rect = self.image.get_rect()
-        rect.center = (self.position.x * CELL_SIZE + CELL_SIZE // 2, 
-                       self.position.y * CELL_SIZE + CELL_SIZE // 2)
+        rect.center = (self.position.x * CELL_SIZE + CELL_SIZE // 2, self.position.y * CELL_SIZE + CELL_SIZE // 2)
         return rect
 
     def draw(self, screen):

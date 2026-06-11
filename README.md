@@ -67,3 +67,7 @@ python main.py
 
 ## Patch Notes v 0.1.2
 - Small adjustments to the main menu logic, also added a background image. Currently looking into having a game instance running as the background. 
+
+## Patch Notes v 0.1.3
+- Added Tanks! The won't spawn until at least wave 20, higher health enemies that move slower.
+- Bug Fix: Enemies now correctly face the direction they are moving along the path
