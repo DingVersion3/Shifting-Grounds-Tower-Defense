@@ -1,4 +1,4 @@
-# Shifting Grounds Tower Defense v 0.1.2
+# Shifting Grounds Tower Defense v 0.1.3
 
 A procedurally generated tower defense game built with Python and Pygame.
 
@@ -49,6 +49,8 @@ python main.py
 - Gameplay adjustments
     - Fine tuning numbers
     - Adjustments are hard considering paths are randomly generated and theres going to be times where its too easy or too hard. Trying to find a balance between how often the extremes happen
+    - Finish Adding Airplanes, they will drop bombs that can destroy a random tower, Less health, move faster and will kill you if they run into your base.
+    - Update UI to use assets for $, : and numbers, looking into a matching text font.
 - Multiplayer
     - How will multiplayer work? Great question, I'm not sure yet. I'm thinking of just splitting the map in half and each player gets a half to defend. Not sure if using randomly generated paths would be a good idea or not in this scenario so I might have to spend some time creating maps. Unsure of the direction at this time.
     

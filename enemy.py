@@ -100,3 +100,17 @@ class Tank(Enemy):
         # 3. Blit safely without shifting offsets
         screen.blit(self.body, body_rect)
         screen.blit(self.turret, turret_rect)
+
+
+class Airplane(Enemy):
+    def __init__(self, health, speed, x, y, path_index, damage, path_cells):
+        super().__init__(health, speed, x, y, path_index, damage, path_cells)
+
+        self.original_image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile271.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+        self.image = self.original_image
+
+    def rotate_assets(self):
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
+
+    def draw(self, screen):
+        screen.blit(self.image, self.shape())

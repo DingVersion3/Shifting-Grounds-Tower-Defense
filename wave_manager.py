@@ -1,5 +1,5 @@
 import pygame
-from enemy import Enemy, Tank
+from enemy import Enemy, Tank, Airplane
 import random
 
 class WaveManager():
@@ -13,11 +13,18 @@ class WaveManager():
         self.next_wave_countdown = 10
         self.tanks_spawned = 0
         self.tanks_remain = 0
+        self.airplanes_spawned = 0
+        self.airplanes_remain = 0
 
     def _tanks_for_wave(self, wave_num):
         if wave_num < 20:
             return 0
         return 1 + (wave_num - 20) // 2
+    
+    def airplane_for_wave(self, wave_num):
+        if wave_num < 50:
+            return 0
+        return 1 + (wave_num - 50) // 2
 
     def _start_next_wave(self):
         self.wave_num += 1
@@ -25,6 +32,8 @@ class WaveManager():
         self.enemy_remain = 10 + (self.wave_num * 2)
         self.tanks_remain = self._tanks_for_wave(self.wave_num)
         self.tanks_spawned = 0
+        self.airplanes_remain = self.airplane_for_wave(self.wave_num)
+        self.airplanes_spawned = 0
         self.next_wave_countdown = max(2, 10 - self.wave_num)
         self.spawn_timer = max(0.5, 2 - (self.wave_num * 0.1))
         self.inbetween_waves = False
@@ -37,8 +46,22 @@ class WaveManager():
 
         # Spawn a tank every 4th enemy while tanks remain
         spawn_tank = self.tanks_remain > 0 and self.enemy_num_spawn % 4 == 0
+        spawn_airplane = self.airplanes_remain > 0 and self.enemy_num_spawn % 3 == 0
 
-        if spawn_tank:
+        if spawn_airplane:
+            Airplane.containers = (updateable, drawable, enemies)
+            Airplane(
+                health=base_health * 0.5,
+                speed=base_speed * 1.5,
+                x=start.x,
+                y=start.y,
+                path_index=1,
+                damage=3,
+                path_cells=self.path_cells,
+            )
+            self.airplanes_remain -= 1
+            self.airplanes_spawned += 1
+        elif spawn_tank:
             Tank.containers = (updateable, drawable, enemies)
             Tank(
                 health=base_health * 3,
