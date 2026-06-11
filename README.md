@@ -10,13 +10,13 @@ Every game generates a new map with a unique path for enemies to follow, so no t
 
 ## How to Play
 
-- Press your S key to start the game at the main menu
+- Press your S key or click the Start button to start the game at the main menu
 - Enemies spawn in waves and follow the path from the start (green x) to the end (black x)
 - Click a tower in the shop bar at the bottom to select it, then click an empty tile to place it
 - Towers automatically attack enemies in range
 - Earn gold by killing enemies and spend it on towers
 - You have 3 lives — each enemy that reaches the end costs you one
-- Survive all waves to win, or press R on the game over screen to restart
+- Survive as long as possible. You can press R on the game over screen to restart
 
 ## Tower Types
 
@@ -43,8 +43,15 @@ python main.py
 ## Planned Work
 
 - Better looking Main Menu
+    - Game instance running as the menus background
+    - cleaner looking buttons
+    - cleaner title text
 - Gameplay adjustments
+    - Fine tuning numbers
+    - Adjustments are hard considering paths are randomly generated and theres going to be times where its too easy or too hard. Trying to find a balance between how often the extremes happen
 - Multiplayer
+    - How will multiplayer work? Great question, I'm not sure yet. I'm thinking of just splitting the map in half and each player gets a half to defend. Not sure if using randomly generated paths would be a good idea or not in this scenario so I might have to spend some time creating maps. Unsure of the direction at this time.
+    
 
 ## Suggestions 
 
