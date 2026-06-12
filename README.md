@@ -21,8 +21,8 @@ Every game generates a new map with a unique path for enemies to follow, so no t
 ## Tower Types
 
 - **Basic Tower (100g)** — balanced damage and fire rate
-- **JT Tower (10,000g)** — splash damage, hits all enemies in range
-- **Laser Tower (100,000g)** — fast fire rate, high damage, save up for these
+- **JT Tower (1,000g)** — splash damage, hits all enemies in range
+- **Laser Tower (10,000g)** — fast fire rate, high damage, save up for these
 
 ## Setup
 
@@ -46,17 +46,24 @@ python main.py
     - Game instance running as the menus background
     - cleaner looking buttons
     - cleaner title text
+    - settings page?
 - Gameplay adjustments
+    - Scenary Changes based on wave number(randomly chooses a theme that isn't the one you're currently or last used) while keeping the same path and towers up
     - Fine tuning numbers
     - Adjustments are hard considering paths are randomly generated and theres going to be times where its too easy or too hard. Trying to find a balance between how often the extremes happen
-    - Finish Adding Airplanes, they will drop bombs that can destroy a random tower, Less health, move faster and will kill you if they run into your base.
-    - Update UI to use assets for $, : and numbers, looking into a matching text font.
+    - Update UI to use a matching text font, beautify UI
+    - Add more Towers(Nukes, Sniper, Laser Sniper?) Would love suggestions on this!
+    - Create multiple map layouts that the "AI" can create
+    - Create Tower bases and have towers rotate towards the target they are shooting
+    - find assets to beautify the map(trees, buildings, bushes, etc)
 - Multiplayer
+    - Initial thought is each player owns a side of the map where you can place towers and generate units to send at the opponent. If you're old like me and played "Age of War", then im thinking something like that but just multiplayer instead of going against an "ai".
     - How will multiplayer work? Great question, I'm not sure yet. I'm thinking of just splitting the map in half and each player gets a half to defend. Not sure if using randomly generated paths would be a good idea or not in this scenario so I might have to spend some time creating maps. Unsure of the direction at this time.
     
 
 ## Known Bugs
 - Restarting currently brings you back to the main menu instead of creating a new game state
+- Enemies will randomly cut corners going along the path(edge case)
 
 ## Suggestions 
 
@@ -78,7 +85,7 @@ python main.py
 - Bug Fix: Enemies now correctly face the direction they are moving along the path
 
 ## Patch Notes v 0.2.0
-- Added Airplanes!! Move fast but dont have as much health, won't spawn until at least wave 50
+- Added Airplanes!! Move fast but dont have as much health, won't spawn until at least wave 50. Decided against airplanes doing towers to your turrets, would have to add the ability to the other enemies and i dont want that style of gameplay in single player. Could potentially do something like that with multiplayer. 
 - Update assets for enemies based on the wave youre on, visually shows enemies getting stronger at various points of your run, enemies will stop changing after wave 75
 - Update Game UI Bar to use assets for numbers and $
 - Starting Player Money is now $300
