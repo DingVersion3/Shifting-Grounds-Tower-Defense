@@ -1,14 +1,12 @@
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, UI_BAR_HEIGHT
 from logger import log_state
-from tower import Tower
-from jt_tower import JTTower
-from lasertower import LaserTower
+from tower import Tower, JTTower, LaserTower
 from map import Map
 from mapgenerator import MapGenerator
 from enemy import Enemy
 from wave_manager import WaveManager
-from shot import Shot
+from shot import Shot, Rocket, Laser
 from player import Player
 from gameover import GameOverScreen
 from ui import UIBar
@@ -17,11 +15,11 @@ from mainmenu import MainMenu
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN, display=0)
     fps = pygame.time.Clock()
     dt = 0.0
     message_font = pygame.font.SysFont('sans', 40)  
-    invalid_placement_timer = 0                           
+    invalid_placement_timer = 0  
 
     menu = MainMenu(screen)
     result = menu.display()
@@ -36,12 +34,15 @@ def main():
     LaserTower.containers = (updateable, drawable)
     Tower.containers = (updateable, drawable)
     Shot.containers = (shots, updateable, drawable)
+    Rocket.containers = (shots, updateable, drawable)
+    Laser.containers = (shots, updateable, drawable)
     game_map = Map()
     generated_map = MapGenerator(game_map.grid)
     path_cells = generated_map.generate_path()
     wave_manager = WaveManager(path_cells)
     player = Player(wave_manager)
     ui_bar = UIBar(screen, player, wave_manager)
+    paused = False
     selected_tower = None
     placed_towers = set()
     while True:
@@ -49,6 +50,9 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    paused = not paused
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if event.pos[1] > SCREEN_HEIGHT - UI_BAR_HEIGHT:
@@ -73,6 +77,12 @@ def main():
                                     placed_towers.add((tower_x, tower_y))
                             else:
                                 invalid_placement_timer = 60
+        if paused: 
+            pause_text = message_font.render("PAUSED", True, (255, 255, 255))
+            screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
+            pygame.display.flip()
+            fps.tick(60)
+            continue
         updateable.update(dt, enemies, player)
         if player.health <= 0:
             result = GameOverScreen(screen, wave_manager.wave_num).display()

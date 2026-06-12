@@ -1,4 +1,4 @@
-# Shifting Grounds Tower Defense v 0.2.1
+# Shifting Grounds Tower Defense v 0.2.2
 
 A procedurally generated tower defense game built with Python and Pygame.
 
@@ -46,7 +46,6 @@ python main.py
     - Game instance running as the menus background
     - cleaner looking buttons
     - cleaner title text
-    - settings page?
 - Gameplay adjustments
     - Scenary Changes based on wave number(randomly chooses a theme that isn't the one you're currently or last used) while keeping the same path and towers up
     - Fine tuning numbers
@@ -64,6 +63,7 @@ python main.py
 ## Known Bugs
 - Restarting currently brings you back to the main menu instead of creating a new game state
 - Enemies will randomly cut corners going along the path(edge case)
+- How the game determines your main monitor is sometimes off and can open on secondary monitors that aren't your main monitor when you have multiple monitors.
 
 ## Suggestions 
 
@@ -93,3 +93,10 @@ python main.py
 ## Patch Notes v 0.2.1
 - JT Towers and Laser Towers are now cheaper, planning to add more expensive turrets in the future.
 - Updated Game Engine to pygame-ce, this allowed me to update to python 3.14. Please be sure to check how to set it up again.
+
+## Patch Notes v 0.2.2
+- Settings page added. Fullscreen and windowed are now supported.
+- Updated organization of Tower code(all tower types now live in tower.py)
+- Added a Pause Feature! currently cant quit the game while paused unless you ctrl + c from your console (WIP)
+- Can press "q" to quit the game when at the game over screen
+- Updated Tower assets, some logic still needed for it to all look clean
