@@ -1,4 +1,4 @@
-# Shifting Grounds Tower Defense v 0.2.0
+# Shifting Grounds Tower Defense v 0.2.1
 
 A procedurally generated tower defense game built with Python and Pygame.
 
