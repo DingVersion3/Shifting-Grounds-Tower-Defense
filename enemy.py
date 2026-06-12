@@ -3,7 +3,7 @@ import math
 from constants import CELL_SIZE
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, health, speed, x, y, path_index, damage, path_cells):
+    def __init__(self, health, speed, x, y, path_index, damage, path_cells, image):
         if hasattr(self, "containers"):
             super().__init__(self.containers)
         else:
@@ -17,7 +17,7 @@ class Enemy(pygame.sprite.Sprite):
         self.path_cells = path_cells
         
         # Store unrotated base image
-        self.original_image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile248.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+        self.original_image = image
         self.image = self.original_image
         self.angle = 0
 
@@ -71,12 +71,12 @@ class Enemy(pygame.sprite.Sprite):
 
 
 class Tank(Enemy):
-    def __init__(self, health, speed, x, y, path_index, damage, path_cells):
-        super().__init__(health, speed, x, y, path_index, damage, path_cells)
+    def __init__(self, health, speed, x, y, path_index, damage, path_cells, body_image, turret_image):
+        super().__init__(health, speed, x, y, path_index, damage, path_cells, body_image)
         
         # Store unrotated base parts
-        self.original_body = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile268.png").convert_alpha(),(CELL_SIZE, CELL_SIZE))
-        self.original_turret = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile291.png").convert_alpha(),(CELL_SIZE, CELL_SIZE))
+        self.original_body = body_image
+        self.original_turret = turret_image
         
         # Dynamically tracked runtime parts
         self.body = self.original_body
@@ -103,14 +103,18 @@ class Tank(Enemy):
 
 
 class Airplane(Enemy):
-    def __init__(self, health, speed, x, y, path_index, damage, path_cells):
-        super().__init__(health, speed, x, y, path_index, damage, path_cells)
+    def __init__(self, health, speed, x, y, path_index, damage, path_cells, image):
+        super().__init__(health, speed, x, y, path_index, damage, path_cells, image)
 
-        self.original_image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile271.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+        self.original_image = image
         self.image = self.original_image
 
     def rotate_assets(self):
         self.image = pygame.transform.rotate(self.original_image, self.angle)
 
     def draw(self, screen):
-        screen.blit(self.image, self.shape())
+        center_x = self.position.x * CELL_SIZE + CELL_SIZE // 2
+        center_y = self.position.y * CELL_SIZE + CELL_SIZE // 2
+        
+        body_rect = self.image.get_rect(center=(center_x, center_y))
+        screen.blit(self.image, body_rect)

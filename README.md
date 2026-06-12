@@ -1,4 +1,4 @@
-# Shifting Grounds Tower Defense v 0.1.3
+# Shifting Grounds Tower Defense v 0.2.0
 
 A procedurally generated tower defense game built with Python and Pygame.
 
@@ -55,6 +55,9 @@ python main.py
     - How will multiplayer work? Great question, I'm not sure yet. I'm thinking of just splitting the map in half and each player gets a half to defend. Not sure if using randomly generated paths would be a good idea or not in this scenario so I might have to spend some time creating maps. Unsure of the direction at this time.
     
 
+## Known Bugs
+- Restarting currently brings you back to the main menu instead of creating a new game state
+
 ## Suggestions 
 
 - I currently don't have a system for suggestions however you're welcome to put your suggestions in the boot.dev personal project thread i have going here https://discord.com/channels/551921866173054977/1507828092989734982
@@ -73,3 +76,9 @@ python main.py
 ## Patch Notes v 0.1.3
 - Added Tanks! The won't spawn until at least wave 20, higher health enemies that move slower.
 - Bug Fix: Enemies now correctly face the direction they are moving along the path
+
+## Patch Notes v 0.2.0
+- Added Airplanes!! Move fast but dont have as much health, won't spawn until at least wave 50
+- Update assets for enemies based on the wave youre on, visually shows enemies getting stronger at various points of your run, enemies will stop changing after wave 75
+- Update Game UI Bar to use assets for numbers and $
+- Starting Player Money is now $300
