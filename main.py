@@ -63,13 +63,13 @@ def main():
                                     Tower(tower_x, tower_y)
                                     player.money -= 100
                                     placed_towers.add((tower_x, tower_y))
-                                elif selected_tower == "jt" and player.money >= 10000:
+                                elif selected_tower == "jt" and player.money >= 1000:
                                     JTTower(tower_x, tower_y)
-                                    player.money -= 10000
+                                    player.money -= 1000
                                     placed_towers.add((tower_x, tower_y))
-                                elif selected_tower == "laser" and player.money >= 100000:
+                                elif selected_tower == "laser" and player.money >= 10000:
                                     LaserTower(tower_x, tower_y)
-                                    player.money -= 100000
+                                    player.money -= 10000
                                     placed_towers.add((tower_x, tower_y))
                             else:
                                 invalid_placement_timer = 60

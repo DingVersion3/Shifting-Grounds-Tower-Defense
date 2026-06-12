@@ -95,10 +95,10 @@ class UIBar():
         self.draw_graphical_value(screen, 100, basic_price_x, image_y, show_dollar=True)
 
         jt_price_x = 450 + jt_tower.get_width()
-        self.draw_graphical_value(screen, 10000, jt_price_x, image_y, show_dollar=True)
+        self.draw_graphical_value(screen, 1000, jt_price_x, image_y, show_dollar=True)
 
         laser_price_x = 700 + laser_tower.get_width()
-        self.draw_graphical_value(screen, 100000, laser_price_x, image_y, show_dollar=True)
+        self.draw_graphical_value(screen, 10000, laser_price_x, image_y, show_dollar=True)
 
 
     def handle_click(self, pos):

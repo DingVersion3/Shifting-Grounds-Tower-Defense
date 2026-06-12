@@ -82,3 +82,6 @@ python main.py
 - Update assets for enemies based on the wave youre on, visually shows enemies getting stronger at various points of your run, enemies will stop changing after wave 75
 - Update Game UI Bar to use assets for numbers and $
 - Starting Player Money is now $300
+
+## Patch Notes v 0.2.1
+- JT Towers and Laser Towers are now cheaper, planning to add more expensive turrets in the future.
