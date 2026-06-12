@@ -92,3 +92,4 @@ python main.py
 
 ## Patch Notes v 0.2.1
 - JT Towers and Laser Towers are now cheaper, planning to add more expensive turrets in the future.
+- Updated Game Engine to pygame-ce, this allowed me to update to python 3.14. Please be sure to check how to set it up again.
