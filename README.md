@@ -29,16 +29,16 @@ Every game generates a new map with a unique path for enemies to follow, so no t
 ```bash
 git clone https://github.com/DingVersion3/Shifting-Grounds-Tower-Defense
 cd Shifting-Grounds-Tower-Defense
-python -m venv .venv
+python3.14 -m venv .venv
 source .venv/bin/activate
-pip install pygame
+pip install pygame-ce
 python main.py
 ```
 
 ## Requirements
 
-- Python 3.12+
-- Pygame 2.6+
+- Python 3.14+
+- Pygame-CE 2.5+
 
 ## Planned Work
 

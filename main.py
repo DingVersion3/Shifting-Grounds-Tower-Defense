@@ -20,7 +20,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     fps = pygame.time.Clock()
     dt = 0.0
-    message_font = pygame.font.SysFont('comicsans', 40)  
+    message_font = pygame.font.SysFont('sans', 40)  
     invalid_placement_timer = 0                           
 
     menu = MainMenu(screen)

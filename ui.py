@@ -6,7 +6,7 @@ class UIBar():
         self.screen = screen
         self.player = player
         self.wave_manager = wave_manager
-        self.font = pygame.font.SysFont('comicsans', 24)
+        self.font = pygame.font.SysFont('sans', 24)
         self.rect = pygame.Rect(0, SCREEN_HEIGHT - UI_BAR_HEIGHT, SCREEN_WIDTH, UI_BAR_HEIGHT)
 
         TARGET_HEIGHT = 24 
