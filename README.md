@@ -1,12 +1,15 @@
-# Shifting Grounds Tower Defense v 0.2.2
+# Shifting Grounds Tower Defense v 0.2.3
 
 A procedurally generated tower defense game built with Python and Pygame.
 
 Every game generates a new map with a unique path for enemies to follow, so no two playthroughs are the same.
 
 ## Artwork
-- Im currently using free source assets from https://kenney.nl/assets/tower-defense-top-down 
-- If interested in showing the artist some love you can suport them here https://kenney.nl/donate
+- Im currently using free source assets from:
+    1. https://kenney.nl/assets/tower-defense-top-down
+    2. https://kenney.nl/assets/kenney-fonts
+- If interested in showing the artist some love you can suport them here:
+    1. https://kenney.nl/donate
 
 ## How to Play
 
@@ -45,12 +48,11 @@ python main.py
 - Better looking Main Menu
     - Game instance running as the menus background
     - cleaner looking buttons
-    - cleaner title text
 - Gameplay adjustments
     - Scenary Changes based on wave number(randomly chooses a theme that isn't the one you're currently or last used) while keeping the same path and towers up
     - Fine tuning numbers
     - Adjustments are hard considering paths are randomly generated and theres going to be times where its too easy or too hard. Trying to find a balance between how often the extremes happen
-    - Update UI to use a matching text font, beautify UI
+    - beautify UI
     - Add more Towers(Nukes, Sniper, Laser Sniper?) Would love suggestions on this!
     - Create multiple map layouts that the "AI" can create
     - Create Tower bases and have towers rotate towards the target they are shooting
@@ -63,7 +65,6 @@ python main.py
 ## Known Bugs
 - Restarting currently brings you back to the main menu instead of creating a new game state
 - Enemies will randomly cut corners going along the path(edge case)
-- How the game determines your main monitor is sometimes off and can open on secondary monitors that aren't your main monitor when you have multiple monitors.
 
 ## Suggestions 
 
@@ -100,3 +101,10 @@ python main.py
 - Added a Pause Feature! currently cant quit the game while paused unless you ctrl + c from your console (WIP)
 - Can press "q" to quit the game when at the game over screen
 - Updated Tower assets, some logic still needed for it to all look clean
+
+## Patch Notes v 0.2.3
+- Updated fonts in Main Menu, UI and Game Over screens
+- Towers and Tower shots now rotate towrds enemies correctly
+- Updated Basic Towers to use a different shot asset
+- Press "Q" while paused to quit the game
+- Bug Fix: Game loads in windowed to fix the fullscreen on multiple monitors bug, go into settings to play in full screen

@@ -5,7 +5,7 @@ class GameOverScreen():
     def __init__(self, screen, wave_num):
         self.screen = screen
         self.wave_num = wave_num
-        self.font = pygame.font.SysFont('sans', 80)
+        self.font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 80)
         self.running = True
 
     def display(self):

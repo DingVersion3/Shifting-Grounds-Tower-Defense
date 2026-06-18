@@ -6,10 +6,11 @@ class UIBar():
         self.screen = screen
         self.player = player
         self.wave_manager = wave_manager
-        self.font = pygame.font.SysFont('sans', 24)
+        self.font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 24)
         self.rect = pygame.Rect(0, SCREEN_HEIGHT - UI_BAR_HEIGHT, SCREEN_WIDTH, UI_BAR_HEIGHT)
 
-        TARGET_HEIGHT = 24 
+        TARGET_HEIGHT = 32
+        self.target_height = TARGET_HEIGHT 
 
         raw_dollar = pygame.image.load("assets/towerDefense_tile287.png").convert_alpha()
         scale_ratio = TARGET_HEIGHT / raw_dollar.get_height()
@@ -52,8 +53,9 @@ class UIBar():
         pygame.draw.rect(screen, UI_COLOR, self.rect, 0)
         
         # text and image offsets
-        text_y = SCREEN_HEIGHT - UI_BAR_HEIGHT + 5
-        image_y = SCREEN_HEIGHT - UI_BAR_HEIGHT - 2  
+        text_y = SCREEN_HEIGHT - UI_BAR_HEIGHT + 15 
+        text_height = self.font.get_height()
+        image_y = text_y + (text_height - self.target_height) // 2
         
         # text labels
         health_label = self.font.render('HEALTH: ', True, (255, 0 , 0))
@@ -65,19 +67,19 @@ class UIBar():
 
         basic_tower = self.font.render('BASIC TOWER ', True, basic_color)
         jt_tower = self.font.render('JT TOWER ', True, jt_color)
-        laser_tower = self.font.render('LASER TOWER ', True, laser_color)
+        laser_tower = self.font.render('LASER TOWER', True, laser_color)
 
         # setup click collision boxes
         self.basic_rect = basic_tower.get_rect(topleft=(200, text_y))
-        self.jt_rect = jt_tower.get_rect(topleft=(450, text_y))
-        self.laser_rect = laser_tower.get_rect(topleft=(700, text_y))
+        self.jt_rect = jt_tower.get_rect(topleft=(500, text_y))
+        self.laser_rect = laser_tower.get_rect(topleft=(800, text_y))
 
         # blit text titles
         screen.blit(health_label, (20, text_y)) 
         screen.blit(wave_label, (SCREEN_WIDTH - 150, text_y))
         screen.blit(basic_tower, (200, text_y))
-        screen.blit(jt_tower, (450, text_y))
-        screen.blit(laser_tower, (700, text_y))
+        screen.blit(jt_tower, (550, text_y))
+        screen.blit(laser_tower, (900, text_y))
 
         # draw HEALTH using the tile graphics (No dollar sign)
         health_val_x = 20 + health_label.get_width()
@@ -88,16 +90,16 @@ class UIBar():
         self.draw_graphical_value(screen, self.wave_manager.wave_num, wave_val_x, image_y, show_dollar=False)
 
         # draw player money ( with dollar sign)
-        self.draw_graphical_value(screen, self.player.money, SCREEN_WIDTH // 2 + 100, image_y, show_dollar=True)
+        self.draw_graphical_value(screen, self.player.money, SCREEN_WIDTH // 2 + 400, image_y, show_dollar=True)
 
         # draw tower asset prices (with dollar sign)
         basic_price_x = 200 + basic_tower.get_width()
         self.draw_graphical_value(screen, 100, basic_price_x, image_y, show_dollar=True)
 
-        jt_price_x = 450 + jt_tower.get_width()
+        jt_price_x = 550 + jt_tower.get_width()
         self.draw_graphical_value(screen, 1000, jt_price_x, image_y, show_dollar=True)
 
-        laser_price_x = 700 + laser_tower.get_width()
+        laser_price_x = 900 + laser_tower.get_width()
         self.draw_graphical_value(screen, 10000, laser_price_x, image_y, show_dollar=True)
 
 

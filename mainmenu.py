@@ -40,7 +40,7 @@ class MenuButton():
 
 
 class ToggleButton():
-    """Two-state button that displays current state and toggles on click."""
+    #Two-state button that displays current state and toggles on click.
     def __init__(self, x, y, width, height, labels, font, active_color, inactive_color, hover_color, border_color, border_thickness, border_radius=10):
         self.rect = pygame.Rect(x, y, width, height)
         self.labels = labels          # e.g. ("Windowed", "Fullscreen")
@@ -90,9 +90,9 @@ class SettingsMenu():
         self.is_fullscreen = False
 
         try:
-            self.font = pygame.font.SysFont('arial', 70)
-            self.small_font = pygame.font.SysFont('arial', 36)
-            self.label_font = pygame.font.SysFont('arial', 30)
+            self.font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 70)
+            self.small_font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 36)
+            self.label_font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 30)
         except:
             self.font = pygame.font.Font(None, 70)
             self.small_font = pygame.font.Font(None, 36)
@@ -194,8 +194,8 @@ class MainMenu():
         
         # Explicit font check fallback system prevents text object crashing
         try:
-            self.font = pygame.font.SysFont('arial', 70)
-            self.small_font = pygame.font.SysFont('arial', 36)
+            self.font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 70)
+            self.small_font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 36)
         except:
             self.font = pygame.font.Font(None, 70)
             self.small_font = pygame.font.Font(None, 36)
@@ -222,7 +222,7 @@ class MainMenu():
             self.clock.tick(60)
             self.screen.blit(self.background, (0, 0))
             
-            title = self.font.render('Shifting Grounds Tower Defense', True, (255, 255, 255))
+            title = self.font.render('Shifting Grounds TD', True, (255, 255, 255))
             title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 200))
             self.screen.blit(title, title_rect)
             

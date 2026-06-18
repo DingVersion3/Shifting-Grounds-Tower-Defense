@@ -15,10 +15,10 @@ from mainmenu import MainMenu
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN, display=0)
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     fps = pygame.time.Clock()
     dt = 0.0
-    message_font = pygame.font.SysFont('sans', 40)  
+    message_font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 40) 
     invalid_placement_timer = 0  
 
     menu = MainMenu(screen)
@@ -82,6 +82,11 @@ def main():
             screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
             pygame.display.flip()
             fps.tick(60)
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        pygame.quit()
+                        return "QUIT"
             continue
         updateable.update(dt, enemies, player)
         if player.health <= 0:
