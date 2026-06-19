@@ -6,14 +6,15 @@ class Map():
     def __init__(self):
         self.columns = GRID_COLS
         self.rows = GRID_ROWS
-        self.grid = []
-        for row in range(self.rows):
-            row_list = []
-            for column in range(self.columns):
-                new_cell = Cell("Grass", pygame.Vector2(column, row))
-                new_cell.cell_num = -1
-                row_list.append(new_cell)
-            self.grid.append(row_list)
+        self.grid = [
+            [Cell("Grass", pygame.Vector2(x, y)) for x in range(self.columns)] for y in range(self.rows)]
+
+    def change_theme(self, new_type):
+        for row in self.grid:
+            for cell in row:
+                if cell.cell_type not in ("Road", "Start", "End"):
+                    cell.cell_type = new_type
+                    cell._load_image()
 
     def draw(self, screen):
         for cells in self.grid:

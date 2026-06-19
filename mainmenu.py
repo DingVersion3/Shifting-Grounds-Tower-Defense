@@ -86,7 +86,9 @@ class ToggleButton():
 class SettingsMenu():
     def __init__(self, screen):
         self.screen = screen
-        self.background = pygame.transform.scale(pygame.image.load("assets/menu.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
+        # Fallback to standard color fill if image menu isn't desired over the dynamic bg
+        self.dim_overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+        self.dim_overlay.fill((0, 0, 0, 200)) # Darken further for settings readability
         self.is_fullscreen = False
 
         try:
@@ -134,7 +136,6 @@ class SettingsMenu():
         )
 
     def _apply_display_mode(self):
-        #"""Toggle between fullscreen and windowed without losing the surface reference."""
         if self.display_toggle.state:
             self.screen = pygame.display.set_mode(
                 (SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN
@@ -142,10 +143,17 @@ class SettingsMenu():
         else:
             self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    def display(self):
+    def display(self, bg_update_callback=None):
         while self.running:
-            self.clock.tick(60)
-            self.screen.blit(self.background, (0, 0))
+            dt = self.clock.tick(60) / 1000.0
+
+            # Keep background rendering running if passed from main menu
+            if bg_update_callback:
+                bg_update_callback(dt)
+            else:
+                self.screen.fill("black")
+
+            self.screen.blit(self.dim_overlay, (0, 0))
 
             # Title
             title = self.font.render("Settings", True, (255, 255, 255))
@@ -190,8 +198,45 @@ class SettingsMenu():
 class MainMenu():
     def __init__(self, screen):
         self.screen = screen
-        self.background = pygame.transform.scale(pygame.image.load("assets/menu.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
         
+        # --- FAKE GAME BACKGROUND INSTANCE SETUP ---
+        from map import Map
+        from mapgenerator import MapGenerator
+        from wave_manager import WaveManager
+        from enemy import Enemy
+        # 💡 Import towers and shots so we can rebind containers and spawn them
+        from tower import Tower, JTTower, LaserTower, SniperTower
+        from shot import Shot, Rocket, Laser
+
+        self.bg_updateable = pygame.sprite.Group()
+        self.bg_drawable = pygame.sprite.Group()
+        self.bg_enemies = pygame.sprite.Group()
+        self.bg_shots = pygame.sprite.Group() # 💡 Track background bullets
+
+        # Isolate menu instances away from actual main.py core gameplay containers
+        Enemy.containers = (self.bg_updateable, self.bg_drawable, self.bg_enemies)
+        Shot.containers = (self.bg_shots, self.bg_updateable, self.bg_drawable)
+        Rocket.containers = (self.bg_shots, self.bg_updateable, self.bg_drawable)
+        Laser.containers = (self.bg_shots, self.bg_updateable, self.bg_drawable)
+        
+        # Bind all tower types to the menu sprite groups
+        Tower.containers = (self.bg_updateable, self.bg_drawable)
+        JTTower.containers = (self.bg_updateable, self.bg_drawable)
+        LaserTower.containers = (self.bg_updateable, self.bg_drawable)
+        SniperTower.containers = (self.bg_updateable, self.bg_drawable)
+
+        self.bg_map = Map()
+        self.map_gen = MapGenerator(self.bg_map.grid)
+        self.path_cells = self.map_gen.generate_path()
+        self.bg_wave_manager = WaveManager(self.path_cells)
+
+        # 💡 Call our new method to populate the background with automated towers
+        self._spawn_fake_towers(Tower, JTTower, LaserTower, SniperTower)
+
+        # Translucent darkening matrix overlay to keep fonts high-contrast
+        self.dim_overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+        self.dim_overlay.fill((0, 0, 0, 140)) # Alpha value 140 out of 255
+
         # Explicit font check fallback system prevents text object crashing
         try:
             self.font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 70)
@@ -217,11 +262,71 @@ class MainMenu():
         self.quit_btn = MenuButton(center_x, quit_y, btn_width, btn_height, "Quit", self.small_font, (120, 30, 30), (180, 40, 40), theme_border, border_thickness=3, border_radius=12)
         self.settings_btn = MenuButton(center_x, settings_y, btn_width, btn_height, "Settings", self.small_font, (128, 128, 128), (180, 180, 180), theme_border, border_thickness=3, border_radius=12)
 
+    def _spawn_fake_towers(self, Basic, JT, Laser, Sniper):
+        """Finds valid spots on the map grid and sprinkles a few random towers."""
+        import random
+        tower_types = [Basic, JT, Laser, Sniper]
+        
+        # Gather all grid coordinates that aren't occupied by roads/paths
+        valid_coords = []
+        for y, row in enumerate(self.bg_map.grid):
+            for x, cell in enumerate(row):
+                if cell.cell_type not in ("Road", "Start", "End"):
+                    valid_coords.append((x, y))
+        
+        # Shuffle coordinates and pick a fixed amount of spots (e.g., 6 random spots)
+        random.shuffle(valid_coords)
+        spots_to_place = min(6, len(valid_coords)) 
+        
+        for i in range(spots_to_place):
+            tx, ty = valid_coords[i]
+            chosen_tower_class = random.choice(tower_types)
+            # Instantiate the tower; it automatically hooks into the menu container groups
+            chosen_tower_class(tx, ty)
+
+    def _update_and_draw_bg(self, dt):
+        """Helper to advance and render the fake background scene frame step."""
+        # Update custom background logic systems
+        self.bg_wave_manager.update(dt, self.bg_updateable, self.bg_drawable, self.bg_enemies)
+        
+        # Create a fake player object pass-through just so the tower update logic won't crash
+        # when towers try to modify tracking states or earn money variables.
+        class FakePlayer:
+            def __init__(self): self.money = 0
+            def earn_money(self): pass
+        fake_player = FakePlayer()
+
+        self.bg_updateable.update(dt, self.bg_enemies, fake_player)
+
+        # Handle shot collisions against enemies in the menu simulation
+        for enemy in self.bg_enemies:
+            for shot in self.bg_shots:
+                if shot.collides_with(enemy):
+                    enemy.health -= shot.damage
+                    shot.kill()
+
+        # Despawn entities safely if zero health or reached the end criteria
+        for enemy in self.bg_enemies:
+            if enemy.health <= 0 or getattr(enemy, 'reached_end', False):
+                enemy.kill()
+
+        # Clear screen to paint map environment assets layer
+        self.screen.fill("black")
+        self.bg_map.draw(self.screen)
+        for sprite in self.bg_drawable:
+            sprite.draw(self.screen)
+
     def display(self):
         while self.running:
-            self.clock.tick(60)
-            self.screen.blit(self.background, (0, 0))
+            dt = self.clock.tick(60) / 1000.0
             
+            # 1. Process background game tick
+            self._update_and_draw_bg(dt)
+            
+            # 2. Add tint overlay layer
+            self.screen.blit(self.dim_overlay, (0, 0))
+            
+            # 3. Draw UI content
             title = self.font.render('Shifting Grounds TD', True, (255, 255, 255))
             title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 200))
             self.screen.blit(title, title_rect)
@@ -247,12 +352,12 @@ class MainMenu():
                     return "QUIT"
                 if self.settings_btn.clicked(event):
                     settings = SettingsMenu(self.screen)
-                    result = settings.display()
-                    # Re-grab screen in case fullscreen toggled it
+                    # Pass the drawing callback function so the simulation moves fluidly under settings panel
+                    result = settings.display(bg_update_callback=self._update_and_draw_bg)
+                    
                     self.screen = pygame.display.get_surface()
                     if result == "QUIT":
                         return "QUIT"
-                    # Otherwise fall back into main menu loop
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_s:
                         self.running = False

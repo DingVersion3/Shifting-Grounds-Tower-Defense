@@ -24,9 +24,13 @@ class Cell:
     def _load_image(self):
         if self.cell_type == "Grass":
             self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile024.png"), (CELL_SIZE, CELL_SIZE))
+        elif self.cell_type == "Sand":
+            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile098.png"), (CELL_SIZE, CELL_SIZE))
+        elif self.cell_type == "Concrete":
+            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile034.png"), (CELL_SIZE, CELL_SIZE))
         elif self.cell_type == "Road":
             self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile093.png"), (CELL_SIZE, CELL_SIZE))
         elif self.cell_type == "Start":
-            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile040.png"), (CELL_SIZE, CELL_SIZE))
+            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile065.png"), (CELL_SIZE, CELL_SIZE))
         elif self.cell_type == "End":
-            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile017.png"), (CELL_SIZE, CELL_SIZE))
+            self.image = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile067.png"), (CELL_SIZE, CELL_SIZE))

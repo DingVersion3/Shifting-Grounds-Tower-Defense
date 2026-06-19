@@ -26,8 +26,7 @@ class GameOverScreen():
                     if event.key == pygame.K_q:
                         pygame.quit()
                         return "QUIT"
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r:
+                    elif event.key == pygame.K_r:
                         self.running = False
                         return "RESTART"
                     

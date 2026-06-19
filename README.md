@@ -1,4 +1,4 @@
-# Shifting Grounds Tower Defense v 0.2.3
+# Shifting Grounds Tower Defense v 0.3.0
 
 A procedurally generated tower defense game built with Python and Pygame.
 
@@ -14,7 +14,7 @@ Every game generates a new map with a unique path for enemies to follow, so no t
 ## How to Play
 
 - Press your S key or click the Start button to start the game at the main menu
-- Enemies spawn in waves and follow the path from the start (green x) to the end (black x)
+- Enemies spawn in waves and follow the path from the start (square symbol) to the end (x symbol)
 - Click a tower in the shop bar at the bottom to select it, then click an empty tile to place it
 - Towers automatically attack enemies in range
 - Earn gold by killing enemies and spend it on towers
@@ -26,6 +26,7 @@ Every game generates a new map with a unique path for enemies to follow, so no t
 - **Basic Tower (100g)** — balanced damage and fire rate
 - **JT Tower (1,000g)** — splash damage, hits all enemies in range
 - **Laser Tower (10,000g)** — fast fire rate, high damage, save up for these
+- **Sniper Tower (100,000g)** - long range, slow rate of fire, delete enemies they hit
 
 ## Setup
 
@@ -46,16 +47,9 @@ python main.py
 ## Planned Work
 
 - Better looking Main Menu
-    - Game instance running as the menus background
-    - cleaner looking buttons
+    - clean looking buttons
 - Gameplay adjustments
-    - Scenary Changes based on wave number(randomly chooses a theme that isn't the one you're currently or last used) while keeping the same path and towers up
-    - Fine tuning numbers
-    - Adjustments are hard considering paths are randomly generated and theres going to be times where its too easy or too hard. Trying to find a balance between how often the extremes happen
     - beautify UI
-    - Add more Towers(Nukes, Sniper, Laser Sniper?) Would love suggestions on this!
-    - Create multiple map layouts that the "AI" can create
-    - Create Tower bases and have towers rotate towards the target they are shooting
     - find assets to beautify the map(trees, buildings, bushes, etc)
 - Multiplayer
     - Initial thought is each player owns a side of the map where you can place towers and generate units to send at the opponent. If you're old like me and played "Age of War", then im thinking something like that but just multiplayer instead of going against an "ai".
@@ -63,7 +57,6 @@ python main.py
     
 
 ## Known Bugs
-- Restarting currently brings you back to the main menu instead of creating a new game state
 - Enemies will randomly cut corners going along the path(edge case)
 
 ## Suggestions 
@@ -108,3 +101,13 @@ python main.py
 - Updated Basic Towers to use a different shot asset
 - Press "Q" while paused to quit the game
 - Bug Fix: Game loads in windowed to fix the fullscreen on multiple monitors bug, go into settings to play in full screen
+
+## Patch Notes v 0.3 
+- Sniper Towers! Late game towers that will delete enemies from afar
+- Updated start and end tiles to match path
+- The map will change scenery based on your wave number(Grass, Sand or Concrete)
+- The main menu now features a dynamic, procedurally generated game instance in the background instead of a static image.(No two visits will look the same!)
+- Bug Fix: Restarting no longer brings you back to the main menu and will create a new game state
+- Bug Fix: Restarting no longer resets your fullscreen back to windowed
+**This is starting to feel like a finalized project that im happy with, not sure how many more updates will come, but 1.0 will be the final release barring some desire to add to this project. v0.5 will mean that I'm done with all core gameplay mechanics for single player and that the UI and Main Menu have been finalized for single player. Any version above 0.5 will be me working on multiplayer and how that will work and look**
+
