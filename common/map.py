@@ -1,6 +1,6 @@
 import pygame
-from constants import GRID_COLS, GRID_ROWS
-from cell import Cell
+from .constants import GRID_COLS, GRID_ROWS
+from entities.cell import Cell
 
 class Map():
     def __init__(self):

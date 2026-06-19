@@ -1,6 +1,6 @@
 import pygame
-from map import Map
-from constants import GRID_COLS, GRID_ROWS
+from common.map import Map
+from common.constants import GRID_COLS, GRID_ROWS
 import random
 
 class MapGenerator():

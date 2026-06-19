@@ -1,5 +1,5 @@
 import pygame
-from constants import SHOT_COLLISION_RADIUS
+from .constants import SHOT_COLLISION_RADIUS
 
 # Base class for game objects
 class CircleShape(pygame.sprite.Sprite):

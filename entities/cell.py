@@ -1,5 +1,5 @@
 import pygame
-from constants import CELL_SIZE
+from common.constants import CELL_SIZE
 
 class Cell:
     def __init__(self, cell_type, grid_position, cell_num=-1):

@@ -1,6 +1,6 @@
 import pygame
-from enemy import Enemy, Tank, Airplane
-from constants import CELL_SIZE
+from entities.enemy import Enemy, Tank, Airplane
+from common.constants import CELL_SIZE
 import random
 
 class WaveManager():

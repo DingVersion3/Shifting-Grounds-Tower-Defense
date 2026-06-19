@@ -1,6 +1,6 @@
 import pygame
 
-from constants import  TOWER_HEIGHT, TOWER_WIDTH
+from common.constants import  TOWER_HEIGHT, TOWER_WIDTH
 
 class TowerShape(pygame.sprite.Sprite):
     def __init__(self, x, y, attack_range, fire_rate, shot_timer, damage):

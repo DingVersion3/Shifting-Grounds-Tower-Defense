@@ -1,7 +1,7 @@
 import pygame
 import math
-from circleshape import CircleShape
-from constants import SHOT_SPEED, CELL_SIZE
+from common.circleshape import CircleShape
+from common.constants import SHOT_SPEED, CELL_SIZE
 
 class Shot(CircleShape):
     def __init__(self, x, y, radius, enemy_position, target_enemy, damage):

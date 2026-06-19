@@ -1,6 +1,6 @@
 import pygame
 import math
-from constants import CELL_SIZE
+from common.constants import CELL_SIZE
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, health, speed, x, y, path_index, damage, path_cells, image):

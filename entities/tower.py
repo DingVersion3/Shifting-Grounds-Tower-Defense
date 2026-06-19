@@ -1,8 +1,8 @@
 import pygame
 import math
-from towershape import TowerShape
-from constants import CELL_SIZE, SHOT_RADIUS
-from shot import Shot, Rocket, Laser
+from .towershape import TowerShape
+from common.constants import CELL_SIZE, SHOT_RADIUS
+from .shot import Shot, Rocket, Laser
 
 
 class Tower(TowerShape):

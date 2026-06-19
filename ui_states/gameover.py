@@ -1,5 +1,5 @@
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from common.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class GameOverScreen():
     def __init__(self, screen, wave_num):

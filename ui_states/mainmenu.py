@@ -1,5 +1,5 @@
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from common.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class MenuButton():
     def __init__(self, x, y, width, height, text, font, base_color, hover_color, border_color, border_thickness, border_radius=10):
@@ -200,13 +200,13 @@ class MainMenu():
         self.screen = screen
         
         # --- FAKE GAME BACKGROUND INSTANCE SETUP ---
-        from map import Map
-        from mapgenerator import MapGenerator
-        from wave_manager import WaveManager
-        from enemy import Enemy
+        from common.map import Map
+        from server.mapgenerator import MapGenerator
+        from server.wave_manager import WaveManager
+        from entities.enemy import Enemy
         # 💡 Import towers and shots so we can rebind containers and spawn them
-        from tower import Tower, JTTower, LaserTower, SniperTower
-        from shot import Shot, Rocket, Laser
+        from entities.tower import Tower, JTTower, LaserTower, SniperTower
+        from entities.shot import Shot, Rocket, Laser
 
         self.bg_updateable = pygame.sprite.Group()
         self.bg_drawable = pygame.sprite.Group()

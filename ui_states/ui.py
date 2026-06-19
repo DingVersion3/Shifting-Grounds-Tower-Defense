@@ -1,5 +1,5 @@
 import pygame
-from constants import UI_COLOR, UI_BAR_HEIGHT, SCREEN_HEIGHT, SCREEN_WIDTH
+from common.constants import UI_COLOR, UI_BAR_HEIGHT, SCREEN_HEIGHT, SCREEN_WIDTH
 
 class UIBar():
     def __init__(self, screen, player, wave_manager):

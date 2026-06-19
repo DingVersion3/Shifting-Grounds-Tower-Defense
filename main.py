@@ -1,16 +1,21 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, UI_BAR_HEIGHT
+from common.constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, UI_BAR_HEIGHT
 from logger import log_state
-from tower import Tower, JTTower, LaserTower, SniperTower
-from map import Map
-from mapgenerator import MapGenerator
-from enemy import Enemy
-from wave_manager import WaveManager
-from shot import Shot, Rocket, Laser
-from player import Player
-from gameover import GameOverScreen
-from ui import UIBar
-from mainmenu import MainMenu
+from entities.tower import Tower, JTTower, LaserTower, SniperTower
+from common.map import Map
+from server.mapgenerator import MapGenerator
+from entities.enemy import Enemy
+from server.wave_manager import WaveManager
+from entities.shot import Shot, Rocket, Laser
+from entities.player import Player
+from ui_states.gameover import GameOverScreen
+from ui_states.ui import UIBar
+from ui_states.mainmenu import MainMenu
 
 
 def main():
