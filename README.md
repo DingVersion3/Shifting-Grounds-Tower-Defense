@@ -1,4 +1,4 @@
-# Shifting Grounds Tower Defense v 0.3.0
+# Shifting Grounds Tower Defense v 0.4.0
 
 A procedurally generated tower defense game built with Python and Pygame.
 
@@ -39,6 +39,62 @@ pip install pygame-ce
 python main.py
 ```
 
+### 🧪 Step-by-Step Local Multiplayer Stress Testing/Setup
+
+To validate the networking layer locally on your machine using the automated AI bot runner, complete the following setup steps:
+
+1. **Activate Environment and Boot Server Backend**
+   Open a primary system terminal window, ensure your virtual environment is engaged, and start the core network engine listener:
+   ```bash
+   source .venv/bin/activate
+   python server/main_server.py
+   ```
+   *Expected output: `[SERVER] Dedicated Host running on port 5555...`*
+
+2. **Initialize the AI Testing Client**
+   Open a secondary independent terminal tab or window, and launch the automated dummy player agent:
+   ```bash
+   source .venv/bin/activate
+   python server/bot_client.py
+   ```
+   *Expected output: `[AI BOT] Connected successfully! Operating as Player 2.`*
+
+3. **Launch the Human Interface Game Window**
+   Open a third independent terminal tab or window, and launch the primary Pygame graphics entry loop:
+   ```bash
+   source .venv/bin/activate
+   python main.py
+   ```
+
+4. **Establish Connection Handshake**
+   * On your Pygame interface window, select the **MULTIPLAYER** button selection.
+   * Inside the interactive address input bar field, input the target host IP address:
+     * **Testing Locally (Same Computer):** Use the local loopback configuration: `127.0.0.1`.
+     * **Playing Over Local Network (Same Home WiFi/LAN):** The host must find and provide their local network IP address to other players. Note that this IP address is dynamically assigned by your router and can change over time.
+     * **Playing Over the Internet (Remote WAN):** The host must use a port-forwarding configuration on their router for port `5555` or utilize a tunnel proxy tool like **ngrok** to provide a connectable endpoint.
+   * Click **Connect**.
+   * *Verification: Look at the server terminal panel to confirm connection handshakes register successfully for both players. As the game proceeds, watch automated bot towers successfully authenticate, pass territory checks, and add to the global shared rendering state!*
+
+#### 🔍 How to Find Your Local Network IP Address (For LAN Matches)
+If you are hosting a game for other players on the same network environment, use these terminal platform commands on the host machine to locate your IP:
+
+* **Linux / Ubuntu:** Open your terminal window and execute:
+  ```bash
+  hostname -I
+  ```
+  *(Look for the first sequence of numbers starting with `192.168.X.X` or `10.0.X.X`)*
+
+* **Windows:** Open Command Prompt (`cmd`) and execute:
+  ```cmd
+  ipconfig
+  ```
+  *(Look for the **IPv4 Address** entry under your active Wireless or Ethernet Network Adapter configuration)*
+
+* **macOS:** Open Terminal and execute:
+  ```bash
+  ipconfig getifaddr en0
+  ```
+
 ## Requirements
 
 - Python 3.14+
@@ -48,16 +104,19 @@ python main.py
 
 - Better looking Main Menu
     - clean looking buttons
+    - tie it all together to look like a finalized product and not like its in debug mode
 - Gameplay adjustments
     - beautify UI
     - find assets to beautify the map(trees, buildings, bushes, etc)
 - Multiplayer
+    - Finish implementation, structure and baseline is setup
     - Initial thought is each player owns a side of the map where you can place towers and generate units to send at the opponent. If you're old like me and played "Age of War", then im thinking something like that but just multiplayer instead of going against an "ai".
-    - How will multiplayer work? Great question, I'm not sure yet. I'm thinking of just splitting the map in half and each player gets a half to defend. Not sure if using randomly generated paths would be a good idea or not in this scenario so I might have to spend some time creating maps. Unsure of the direction at this time.
+    - How will multiplayer work? I'm thinking of just splitting the map in half and each player gets a half to defend. Not sure if using randomly generated paths would be a good idea or not in this scenario so I might have to spend some time creating maps. Unsure of the direction at this time.
     
 
 ## Known Bugs
 - Enemies will randomly cut corners going along the path(edge case)
+- AI can't place towers down in multiplayer(I don't recommend using the AI at this current point in time)
 
 ## Suggestions 
 
@@ -110,4 +169,12 @@ python main.py
 - Bug Fix: Restarting no longer brings you back to the main menu and will create a new game state
 - Bug Fix: Restarting no longer resets your fullscreen back to windowed
 **This is starting to feel like a finalized project that im happy with, not sure how many more updates will come, but 1.0 will be the final release barring some desire to add to this project. v0.5 will mean that I'm done with all core gameplay mechanics for single player and that the UI and Main Menu have been finalized for single player. Any version above 0.5 will be me working on multiplayer and how that will work and look**
+
+## Patch Notes v 0.4
+- Multiplayer basics are up and running. Check above on how to set it all up if you're wanting to play with someone. The current head to head portion isn't available quite yet but you can play with your friends!
+- Complete project restructure for multiplayer
+- There are plenty of bugs in the multiplayer game loop(it wont break but it's not running as designed at this moment in time), it's not entirely recommended to use it right now as it's slightly disappointing but i wanted the baseline done so that I could finalize the UI elements comfortably. 
+- Introduced Bug: AI can't place towers down in multiplayer. I don't recommend using the AI at this current point in time for gameplay, but for testing connections to your ip address it does its job
+
+
 

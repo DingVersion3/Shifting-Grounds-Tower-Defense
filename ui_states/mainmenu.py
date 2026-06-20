@@ -1,5 +1,6 @@
 import pygame
 from common.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from client.network_client import NetworkClient
 
 class MenuButton():
     def __init__(self, x, y, width, height, text, font, base_color, hover_color, border_color, border_thickness, border_radius=10):
@@ -460,8 +461,9 @@ class MainMenu():
                         return "QUIT"
                     
                 if self.multiplayer_btn.clicked(event):
+                    net_client = NetworkClient()
                     multi_screen = MultiplayerMenu(self.screen)
-                    result = multi_screen.display(network_client=None)
+                    result = multi_screen.display(network_client=net_client)
                     self.screen = pygame.display.get_surface()
                     if result == "QUIT":
                         return "QUIT"
