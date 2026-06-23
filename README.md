@@ -1,4 +1,4 @@
-# Shifting Grounds Tower Defense v 0.4.0
+# Shifting Grounds Tower Defense v 0.4.1
 
 A procedurally generated tower defense game built with Python and Pygame.
 
@@ -177,4 +177,8 @@ If you are hosting a game for other players on the same network environment, use
 - Introduced Bug: AI can't place towers down in multiplayer. I don't recommend using the AI at this current point in time for gameplay, but for testing connections to your ip address it does its job
 
 
-
+## Patch Notes v0.4.1
+- Multiplayer updates
+  1. Enemies now spawn on both sides, collide into each other, and damage each other
+  2. Map is mirrored from left to right to give the most consistent map possible
+  3. Menu restructuring on the back end

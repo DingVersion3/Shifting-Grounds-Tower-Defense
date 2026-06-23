@@ -87,8 +87,8 @@ def main():
         try:
             if game_mode == "MULTIPLAYER" and network_client is not None:
                 p1_path, p2_path = generated_map.generate_multiplayer_path()
-                wave_manager = WaveManager(p1_path)
-                p2_wave_manager = WaveManager(p2_path)
+                wave_manager = WaveManager(p1_path, owner="p1")
+                p2_wave_manager = WaveManager(p2_path, owner="p2")
             else:
                 path_cells = generated_map.generate_path()
                 wave_manager = WaveManager(path_cells)
@@ -176,7 +176,17 @@ def main():
                     game_running = False
                     match_active = False
                 continue
-
+            
+            for e1 in enemies:
+                for e2 in enemies:
+                    if e1.owner == e2.owner:
+                        continue
+                    if not e1.in_combat and not e2.in_combat:
+                        if e1.shape().colliderect(e2.shape()):
+                            e1.in_combat = True
+                            e1.combat_target = e2
+                            e2.in_combat = True
+                            e2.combat_target = e1
             updateable.update(dt, enemies, player)
 
             for enemy in enemies:

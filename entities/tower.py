@@ -12,6 +12,7 @@ class Tower(TowerShape):
         self.original_turret = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile204.png"), (CELL_SIZE, CELL_SIZE))
         self.turret = self.original_turret
         self.angle = 0
+        self.owner = "p1"
 
     def shape(self):
         return pygame.Rect(self.position.x * CELL_SIZE, self.position.y * CELL_SIZE, self.width, self.height)
@@ -27,6 +28,8 @@ class Tower(TowerShape):
         self.shot_timer -= dt
         if self.shot_timer <= 0:
             for enemy in enemies:
+                if enemy.owner == self.owner:
+                    continue
                 target = enemy.position
                 dist = target - self.position
                 if dist.length() <= self.attack_range:

@@ -4,7 +4,8 @@ from common.constants import CELL_SIZE
 import random
 
 class WaveManager():
-    def __init__(self, path_cells):
+    def __init__(self, path_cells, owner="p1"):
+        self.owner = owner
         self.wave_num = 1
         self.enemy_num_spawn = 0
         self.enemy_remain = 10
@@ -83,7 +84,7 @@ class WaveManager():
         spawn_airplane = self.airplanes_remain > 0 and self.enemy_num_spawn % 3 == 0
 
         if spawn_airplane:
-            Airplane.containers = (updateable, drawable, enemies)
+            Airplane.containers = (updateable, drawable, enemies,)
             Airplane(
                 health=base_health * 0.5,
                 speed=base_speed * 1.5,
@@ -93,6 +94,7 @@ class WaveManager():
                 damage=3,
                 path_cells=self.path_cells,
                 image=current_sprites["plane"], # Inject assets here
+                owner=self.owner,
             )
             self.airplanes_remain -= 1
             self.airplanes_spawned += 1
@@ -108,6 +110,7 @@ class WaveManager():
                 path_cells=self.path_cells,
                 body_image=current_sprites["tank_body"],
                 turret_image=current_sprites["tank_turret"],
+                owner=self.owner,
             )
             self.tanks_remain -= 1
             self.tanks_spawned += 1
@@ -121,7 +124,8 @@ class WaveManager():
                 path_index=1,
                 damage=1,
                 path_cells=self.path_cells,
-                image=current_sprites["enemy"], 
+                image=current_sprites["enemy"],
+                owner=self.owner,
             )
 
     def update(self, dt, updateable, drawable, enemies):

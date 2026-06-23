@@ -3,7 +3,7 @@ import math
 from common.constants import CELL_SIZE
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, health, speed, x, y, path_index, damage, path_cells, image):
+    def __init__(self, health, speed, x, y, path_index, damage, path_cells, image, owner="p1"):
         if hasattr(self, "containers"):
             super().__init__(self.containers)
         else:
@@ -15,6 +15,9 @@ class Enemy(pygame.sprite.Sprite):
         self.path_index = path_index
         self.damage = damage
         self.path_cells = path_cells
+        self.owner = owner
+        self.in_combat = False
+        self.combat_target = None
         
         # Store unrotated base image
         self.original_image = image
@@ -33,6 +36,14 @@ class Enemy(pygame.sprite.Sprite):
         screen.blit(self.image, self.shape())
 
     def update(self, dt, enemies=None, player=None):
+        if self.in_combat:
+            if self.in_combat is None or not self.combat_target.alive():
+                self.in_combat = False
+                self.combat_target = None
+            else:
+                self.combat_target.health -= self.damage * dt
+            return
+        
         if self.path_index > len(self.path_cells) - 1:
             self.kill()
             if player:
