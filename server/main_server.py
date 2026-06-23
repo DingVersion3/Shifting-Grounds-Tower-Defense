@@ -59,7 +59,7 @@ class GameServer:
 
     def process_network_traffic(self):
         # select reads our list of sockets and isolates only those with data waiting to be read
-        read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list, 0)
+        read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list, 0.1)
         for notified_socket in read_sockets:
             if notified_socket == self.server_socket:
                 client_socket, client_address = self.server_socket.accept()

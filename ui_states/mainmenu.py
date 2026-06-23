@@ -290,6 +290,7 @@ class MultiplayerMenu():
                             if event.unicode in "0123456789." and len(self.ip_input) < 15: #max length for ip address, acccepts numbers and decimals only
                                 self.ip_input += event.unicode
             pygame.display.flip()
+        return "MENU"
 
 
 class MainMenu():
@@ -461,18 +462,8 @@ class MainMenu():
                         return "QUIT"
                     
                 if self.multiplayer_btn.clicked(event):
-                    net_client = NetworkClient()
-                    multi_screen = MultiplayerMenu(self.screen)
-                    result = multi_screen.display(network_client=net_client)
-                    self.screen = pygame.display.get_surface()
-                    if result == "QUIT":
-                        return "QUIT"
-                    elif result == "START_MULTIPLAYER_GAME":
-                        self.running = False
-                        return "START_MULTIPLAYER"
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_s:
-                        self.running = False
-                        return "START"
+                    self.running = False
+                    return "MULTIPLAYER"
                         
             pygame.display.flip()
+        return "MENU"

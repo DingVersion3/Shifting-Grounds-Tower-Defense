@@ -15,7 +15,8 @@ from entities.shot import Shot, Rocket, Laser
 from entities.player import Player
 from ui_states.gameover import GameOverScreen
 from ui_states.ui import UIBar
-from ui_states.mainmenu import MainMenu
+from ui_states.mainmenu import MainMenu, MultiplayerMenu
+from client.network_client import NetworkClient
 
 
 def main():
@@ -25,12 +26,39 @@ def main():
     message_font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 40) 
     skip_menu = False
     game_running = True
+    game_mode = "SINGLEPLAYER"
+    network_client = NetworkClient()
     while game_running:
         if not skip_menu:
-            menu = MainMenu(screen)
-            result = menu.display()
-            if result == "QUIT":
-                break
+            in_menu_flow = True
+            current_menu = "MAIN"
+            while in_menu_flow:
+                if current_menu == "MAIN":
+                    menu = MainMenu(screen)
+                    result = menu.display()
+                    if result == "QUIT":
+                        game_running = False
+                        in_menu_flow = False
+                    elif result == "SINGLEPLAYER" or result == "START":
+                        game_mode = "SINGLEPLAYER"
+                        in_menu_flow = False
+                    elif result == "MULTIPLAYER":
+                        current_menu = "MULTIPLAYER"
+                elif current_menu == "MULTIPLAYER":
+                    mp_menu = MultiplayerMenu(screen)
+                    result = mp_menu.display(network_client)
+                    if result == "QUIT":
+                        game_running = False
+                        in_menu_flow = False
+                    elif result == "MENU":
+                        current_menu = "MAIN"
+                    elif result == "START_MULTIPLAYER_GAME":
+                        game_mode = "MULTIPLAYER"
+                        in_menu_flow = False
+                    else:
+                        current_menu = "MAIN"
+        if not game_running:
+            break
         else:
             skip_menu = False
         
@@ -55,14 +83,29 @@ def main():
 
         game_map = Map()
         generated_map = MapGenerator(game_map.grid)
-        path_cells = generated_map.generate_path()
-        wave_manager = WaveManager(path_cells)
+
+        try:
+            if game_mode == "MULTIPLAYER" and network_client is not None:
+                p1_path, p2_path = generated_map.generate_multiplayer_path()
+                wave_manager = WaveManager(p1_path)
+                p2_wave_manager = WaveManager(p2_path)
+            else:
+                path_cells = generated_map.generate_path()
+                wave_manager = WaveManager(path_cells)
+                p2_wave_manager = None
+        except Exception as e:
+            print(f"DEBUG: CRASH DURING MAP GEN: {e}")
+            continue # This forces it back to the top of the main loop (the Menu)
+
         player = Player(wave_manager)
         ui_bar = UIBar(screen, player, wave_manager)
         current_theme = "Grass"
 
         match_active = True
+        print(f"DEBUG: Starting match. Mode: {game_mode}, Network Client: {network_client}")
         while match_active:
+            if game_mode == "MULTIPLAYER" and network_client is not None:
+                network_client.update()
             log_state()
 
             if wave_manager.wave_num >= 20 and current_theme != "Concrete":
@@ -148,6 +191,8 @@ def main():
             game_map.draw(screen)
             ui_bar.draw(screen, selected_tower)
             wave_manager.update(dt, updateable, drawable, enemies)
+            if p2_wave_manager:
+                p2_wave_manager.update(dt, updateable, drawable, enemies)
 
             for draws in drawable:
                 draws.draw(screen)

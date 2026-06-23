@@ -75,4 +75,63 @@ class MapGenerator():
         start_cell.set_type("Start")
         return path_cells
 
+    def generate_multiplayer_path(self):
+        start_row = random.randint(2, GRID_ROWS - 3)
+        end_row = random.randint(2, GRID_ROWS - 3)
+        start_pos = pygame.Vector2(0, start_row)
+        end_pos = pygame.Vector2(GRID_COLS - 1, end_row)
+
+        waypoints = [start_pos]
+        for _ in range(3):
+            x = random.randint(2, GRID_COLS - 3)
+            y = random.randint(2, GRID_ROWS - 3)
+            waypoints.append(pygame.Vector2(x, y))
+        waypoints.append(end_pos)
+
+        path_cells = self.path_from_waypoints(waypoints)
+
+        p1_path = path_cells
+        p2_path = list(reversed(path_cells))
+
+        p1_path[0].set_type("Start")
+        p1_path[-1].set_type("End")
+        p2_path[0].set_type("Start")
+        p2_path[-1].set_type("End")
+
+        return p1_path, p2_path
+    
+    def path_from_waypoints(self, waypoints):
+        path_cells = []
+        cell_count = 0
+        current_pos = pygame.Vector2(waypoints[0].x, waypoints[0].y)
+
+        for i in range(len(waypoints) - 1):
+            target = waypoints[i + 1]
+
+            # Step horizontally
+            while current_pos.x != target.x:
+                cell = self.grid[int(current_pos.y)][int(current_pos.x)]
+                cell.set_type("Road")
+                cell.cell_num = cell_count
+                path_cells.append(cell)
+                cell_count += 1
+                current_pos.x += 1 if current_pos.x < target.x else -1
+
+            # Step vertically
+            while current_pos.y != target.y:
+                cell = self.grid[int(current_pos.y)][int(current_pos.x)]
+                cell.set_type("Road")
+                cell.cell_num = cell_count
+                path_cells.append(cell)
+                cell_count += 1
+                current_pos.y += 1 if current_pos.y < target.y else -1
+
+        # Catch the very last waypoint cell (the mid_pos)
+        last_wp = waypoints[-1]
+        final_cell = self.grid[int(last_wp.y)][int(last_wp.x)]
+        final_cell.set_type("Road")
+        final_cell.cell_num = cell_count
+        path_cells.append(final_cell)
+
+        return path_cells
 
