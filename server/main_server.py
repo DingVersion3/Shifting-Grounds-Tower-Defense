@@ -33,7 +33,7 @@ class GameServer:
         self.clients = {}
 
         # placeholder for shared global simulation engine tracking metrics
-        self.game_state = {"players": {}, "enemies": [], "projectiles": []}
+        self.game_state = {"players": {}, "enemies": [], "projectiles": [], "towers": []}
         self.player_id_counter = 0
 
     def run(self):
@@ -58,7 +58,6 @@ class GameServer:
                 time.sleep(tick_time - elapsed)
 
     def process_network_traffic(self):
-        # select reads our list of sockets and isolates only those with data waiting to be read
         read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list, 0.1)
         for notified_socket in read_sockets:
             if notified_socket == self.server_socket:
@@ -67,13 +66,26 @@ class GameServer:
 
                 self.player_id_counter += 1
                 p_id = f"player_{self.player_id_counter}"
+                side = "p1" if self.player_id_counter == 1 else "p2"
 
                 self.sockets_list.append(client_socket)
                 self.clients[client_socket] = p_id
 
-                # setup default auth data entry inside our game world state
-                self.game_state["players"][p_id] = {"x": 400, "y": 300, "health": 100}
-                print(f"[SERVER] Handshake established with {client_address}. Assigned: {p_id}")
+                self.game_state["players"][p_id] = {"side": side}
+
+                # Generate map seed on first connection, reuse for second
+                if not hasattr(self, "map_seed"):
+                    import random
+                    self.map_seed = random.randint(0, 999999)
+
+                handshake = json.dumps({
+                    "type": "handshake",
+                    "player_id": p_id,
+                    "side": side,
+                    "map_seed": self.map_seed
+                }) + "\n"
+                client_socket.sendall(handshake.encode('utf-8'))
+                print(f"[SERVER] Handshake sent to {client_address}. ID: {p_id}, Side: {side}, Seed: {self.map_seed}")
 
             else:
                 try:
@@ -84,8 +96,6 @@ class GameServer:
 
                     p_id = self.clients[notified_socket]
                     player_input = json.loads(data.strip())
-
-                    # store input instructions to process world updates
                     self.handle_player_input(p_id, player_input)
 
                 except Exception:
@@ -110,7 +120,7 @@ class GameServer:
                 "grid_y": grid_y,
                 "id": f"tower_{time.time()}"
             }
-            self.game_state["projectiles"].append(new_tower)
+            self.game_state["towers"].append(new_tower)
             print(f"[SERVER] {player_id} built a {tower_type} at ({grid_x, grid_y})")
 
     def update_game_world(self, dt):
@@ -150,7 +160,6 @@ class GameServer:
                                 if shot in projectiles:
                                     projectiles.remove(shot)
 
-            self.game_state["towers"] = [t.to_dict() for t in self.active_towers]
 
 
     def broadcast_game_state(self):

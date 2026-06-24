@@ -1,4 +1,4 @@
-# Shifting Grounds Tower Defense v 0.4.1
+# Shifting Grounds Tower Defense v 0.4.2
 
 A procedurally generated tower defense game built with Python and Pygame.
 
@@ -109,10 +109,9 @@ If you are hosting a game for other players on the same network environment, use
     - beautify UI
     - find assets to beautify the map(trees, buildings, bushes, etc)
 - Multiplayer
-    - Finish implementation, structure and baseline is setup
-    - Initial thought is each player owns a side of the map where you can place towers and generate units to send at the opponent. If you're old like me and played "Age of War", then im thinking something like that but just multiplayer instead of going against an "ai".
-    - How will multiplayer work? I'm thinking of just splitting the map in half and each player gets a half to defend. Not sure if using randomly generated paths would be a good idea or not in this scenario so I might have to spend some time creating maps. Unsure of the direction at this time.
-    
+    - Finish implementation, structure and baseline is setup/buggy
+- Potential Ideas(nothing in this area is guarnteed to be implemented but will be heavily considered)
+  - create an executable with pyinstaller that compiles the entire project into one .exe file that you run verses the current setup. 
 
 ## Known Bugs
 - Enemies will randomly cut corners going along the path(edge case)
@@ -182,3 +181,18 @@ If you are hosting a game for other players on the same network environment, use
   1. Enemies now spawn on both sides, collide into each other, and damage each other
   2. Map is mirrored from left to right to give the most consistent map possible
   3. Menu restructuring on the back end
+
+## Patch Notes v 0.4.2
+- Multiplayer
+  - Currently speaking if you wanted to play with someone, you'd have to join at the same time for the waves to be synced together, you also wont see your opponents towers shot. I'm working to have those together when I come back from vacation next week. 
+  - Bug Fixes
+    1. Players now properly connect to the server
+    2. Towers shoot the correct enemy instead of all the enemies
+    3. Tower placement restcrited to your half of the map
+    4. Tower placements are properly communicated with the server
+    5. Map procedurally generates the left half and mirrors to the right half properly(some funny looking edges cases from time to time, im leaving them)
+  - Updates
+    1. Center line that shows you where the map splits in half
+- Singleplayer
+  - Updates
+    1. Rewritten logic for towers

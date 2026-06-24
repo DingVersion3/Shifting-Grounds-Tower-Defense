@@ -7,19 +7,27 @@ class NetworkClient:
         self.port = 5555
         self.is_connected = False
         self.player_id = None
+        self.side = None
+        self.map_seed = None
 
     def start_connection(self, ip_address):
         try:
             print(f"[NETWORK] Connecting to server at {ip_address}:{self.port}...")
-
-            # establish internet connection handshake
             self.client.connect((ip_address, self.port))
 
-            # turn off blocking mode so our window never freezes
-            self.client.setblocking(False)
+            # Read handshake while still blocking
+            raw = self.client.recv(4096).decode('utf-8')
+            first_message = raw.strip().split('\n')[0]
+            handshake = json.loads(first_message)
 
+            self.player_id = handshake["player_id"]
+            self.side = handshake["side"]
+            self.map_seed = handshake["map_seed"]
+
+            # Now switch to non-blocking for the game loop
+            self.client.setblocking(False)
             self.is_connected = True
-            print("[NETWORK] Successfully connected to server!")
+            print(f"[NETWORK] Connected. ID: {self.player_id}, Side: {self.side}, Seed: {self.map_seed}")
 
         except Exception as e:
             print(f"[NETWORK] Connection failed: {e}")

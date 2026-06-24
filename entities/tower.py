@@ -6,13 +6,13 @@ from .shot import Shot, Rocket, Laser
 
 
 class Tower(TowerShape):
-    def __init__(self, x, y, attack_range=5, fire_rate=1, shot_timer=1, damage=3):
+    def __init__(self, x, y, attack_range=5, fire_rate=1, shot_timer=1, damage=3, owner=None):
         super().__init__(x, y, attack_range, fire_rate, shot_timer, damage)
         self.base = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile181.png"), (CELL_SIZE, CELL_SIZE))
         self.original_turret = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile204.png"), (CELL_SIZE, CELL_SIZE))
         self.turret = self.original_turret
         self.angle = 0
-        self.owner = "p1"
+        self.owner = owner
 
     def shape(self):
         return pygame.Rect(self.position.x * CELL_SIZE, self.position.y * CELL_SIZE, self.width, self.height)
@@ -28,7 +28,7 @@ class Tower(TowerShape):
         self.shot_timer -= dt
         if self.shot_timer <= 0:
             for enemy in enemies:
-                if enemy.owner == self.owner:
+                if enemy.owner is not None and enemy.owner == self.owner:
                     continue
                 target = enemy.position
                 dist = target - self.position
@@ -40,12 +40,13 @@ class Tower(TowerShape):
                     break
 
 class JTTower(TowerShape):
-    def __init__(self, x, y, attack_range=4, fire_rate=3, shot_timer=3, damage=15):
+    def __init__(self, x, y, attack_range=4, fire_rate=3, shot_timer=3, damage=15, owner=None):
         super().__init__(x, y, attack_range, fire_rate, shot_timer, damage)
         self.base = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile183.png"), (CELL_SIZE, CELL_SIZE))
         self.original_turret = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile249.png"), (CELL_SIZE, CELL_SIZE))
         self.turret = self.original_turret
         self.angle = 0
+        self.owner = owner
 
     def shape(self):
         return pygame.Rect(self.position.x * CELL_SIZE, self.position.y * CELL_SIZE, self.width, self.height)
@@ -61,6 +62,8 @@ class JTTower(TowerShape):
         self.shot_timer -= dt
         if self.shot_timer <= 0:
             for enemy in enemies:
+                if enemy.owner is not None and enemy.owner == self.owner:
+                    continue
                 target = enemy.position
                 dist = target - self.position
                 if dist.length() <= self.attack_range:
@@ -70,12 +73,13 @@ class JTTower(TowerShape):
                     self.shot_timer = self.fire_rate
 
 class LaserTower(TowerShape):
-    def __init__(self, x, y, attack_range=7, fire_rate=0.2, shot_timer=0.2, damage=10):
+    def __init__(self, x, y, attack_range=7, fire_rate=0.2, shot_timer=0.2, damage=10, owner=None):
         super().__init__(x, y, attack_range, fire_rate, shot_timer, damage)
         self.base = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile183.png"), (CELL_SIZE, CELL_SIZE))
         self.original_turret = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile250.png"), (CELL_SIZE, CELL_SIZE))
         self.turret = self.original_turret
         self.angle = 0
+        self.owner = owner
 
     def shape(self):
         return pygame.Rect(self.position.x * CELL_SIZE, self.position.y * CELL_SIZE, self.width, self.height)
@@ -91,6 +95,8 @@ class LaserTower(TowerShape):
         self.shot_timer -= dt
         if self.shot_timer <= 0:
             for enemy in enemies:
+                if enemy.owner is not None and enemy.owner == self.owner:
+                    continue
                 target = enemy.position
                 dist = target - self.position
                 if dist.length() <= self.attack_range:
@@ -101,12 +107,13 @@ class LaserTower(TowerShape):
                     break
 
 class SniperTower(TowerShape):
-    def __init__(self, x, y, attack_range=20, fire_rate=10, shot_timer=10, damage=10000):
+    def __init__(self, x, y, attack_range=20, fire_rate=10, shot_timer=10, damage=10000, owner=None):
         super().__init__(x, y, attack_range, fire_rate, shot_timer, damage)
         self.base = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile183.png"), (CELL_SIZE, CELL_SIZE))
         self.original_turret = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile206.png"), (CELL_SIZE, CELL_SIZE))
         self.turret = self.original_turret
         self.angle = 0
+        self.owner = owner
 
     def shape(self):
         return pygame.Rect(self.position.x * CELL_SIZE, self.position.y * CELL_SIZE, self.width, self.height)
@@ -122,6 +129,8 @@ class SniperTower(TowerShape):
         self.shot_timer -= dt
         if self.shot_timer <= 0:
             for enemy in enemies:
+                if enemy.owner is not None and enemy.owner == self.owner:
+                    continue
                 target = enemy.position
                 dist = target - self.position
                 if dist.length() <= self.attack_range:

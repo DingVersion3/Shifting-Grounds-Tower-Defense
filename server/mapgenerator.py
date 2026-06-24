@@ -76,25 +76,73 @@ class MapGenerator():
         return path_cells
 
     def generate_multiplayer_path(self):
-        start_row = random.randint(2, GRID_ROWS - 3)
-        end_row = random.randint(2, GRID_ROWS - 3)
-        start_pos = pygame.Vector2(0, start_row)
-        end_pos = pygame.Vector2(GRID_COLS - 1, end_row)
+        HALF_COLS = GRID_COLS // 2
 
+        # Start on left edge, end at center
+        start_row = random.randint(2, GRID_ROWS - 3)
+        mid_row = random.randint(2, GRID_ROWS - 3)
+        start_pos = pygame.Vector2(0, start_row)
+        mid_pos = pygame.Vector2(HALF_COLS, mid_row)
+
+        # Waypoints constrained to left half only
         waypoints = [start_pos]
-        for _ in range(3):
-            x = random.randint(2, GRID_COLS - 3)
+        for _ in range(2):
+            x = random.randint(1, HALF_COLS - 1)
             y = random.randint(2, GRID_ROWS - 3)
             waypoints.append(pygame.Vector2(x, y))
-        waypoints.append(end_pos)
+        waypoints.append(mid_pos)
 
-        path_cells = self.path_from_waypoints(waypoints)
+        # Build left half path and track coordinates
+        left_path = []
+        left_coords = []
+        cell_count = 0
+        current_pos = pygame.Vector2(waypoints[0].x, waypoints[0].y)
 
-        p1_path = path_cells
-        p2_path = list(reversed(path_cells))
+        for i in range(len(waypoints) - 1):
+            target = waypoints[i + 1]
+            while current_pos.x != target.x:
+                cell = self.grid[int(current_pos.y)][int(current_pos.x)]
+                cell.set_type("Road")
+                cell.cell_num = cell_count
+                left_path.append(cell)
+                left_coords.append((int(current_pos.x), int(current_pos.y)))
+                cell_count += 1
+                current_pos.x += 1 if current_pos.x < target.x else -1
+            while current_pos.y != target.y:
+                cell = self.grid[int(current_pos.y)][int(current_pos.x)]
+                cell.set_type("Road")
+                cell.cell_num = cell_count
+                left_path.append(cell)
+                left_coords.append((int(current_pos.x), int(current_pos.y)))
+                cell_count += 1
+                current_pos.y += 1 if current_pos.y < target.y else -1
 
-        p1_path[0].set_type("Start")
-        p1_path[-1].set_type("End")
+        # Add midpoint
+        mid_cell = self.grid[int(mid_pos.y)][int(mid_pos.x)]
+        mid_cell.set_type("Road")
+        mid_cell.cell_num = cell_count
+        left_path.append(mid_cell)
+        left_coords.append((int(mid_pos.x), int(mid_pos.y)))
+
+        # Mirror left half to right half
+        right_path = []
+        for cell, (cx, cy) in zip(reversed(left_path[:-1]), 
+                                reversed(left_coords[:-1])):
+            mirrored_x = (GRID_COLS - 1) - cx
+            right_cell = self.grid[cy][mirrored_x]
+            right_cell.set_type("Road")
+            right_cell.cell_num = cell_count
+            right_path.append(right_cell)
+            cell_count += 1
+
+        # Full path goes left edge to center to right edge
+        full_path = left_path + right_path
+
+        full_path[0].set_type("Start")
+        full_path[-1].set_type("End")
+
+        p1_path = full_path
+        p2_path = list(reversed(full_path))
         p2_path[0].set_type("Start")
         p2_path[-1].set_type("End")
 

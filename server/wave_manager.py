@@ -4,7 +4,7 @@ from common.constants import CELL_SIZE
 import random
 
 class WaveManager():
-    def __init__(self, path_cells, owner="p1"):
+    def __init__(self, path_cells, owner=None):
         self.owner = owner
         self.wave_num = 1
         self.enemy_num_spawn = 0

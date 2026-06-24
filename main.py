@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import pygame
-from common.constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, UI_BAR_HEIGHT
+from common.constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, UI_BAR_HEIGHT, GRID_COLS
 from logger import log_state
 from entities.tower import Tower, JTTower, LaserTower, SniperTower
 from common.map import Map
@@ -86,16 +86,20 @@ def main():
 
         try:
             if game_mode == "MULTIPLAYER" and network_client is not None:
+                import random
+                random.seed(network_client.map_seed)
                 p1_path, p2_path = generated_map.generate_multiplayer_path()
                 wave_manager = WaveManager(p1_path, owner="p1")
                 p2_wave_manager = WaveManager(p2_path, owner="p2")
+                local_side = network_client.side
             else:
                 path_cells = generated_map.generate_path()
                 wave_manager = WaveManager(path_cells)
                 p2_wave_manager = None
+                local_side = None
         except Exception as e:
             print(f"DEBUG: CRASH DURING MAP GEN: {e}")
-            continue # This forces it back to the top of the main loop (the Menu)
+            continue
 
         player = Player(wave_manager)
         ui_bar = UIBar(screen, player, wave_manager)
@@ -105,7 +109,9 @@ def main():
         print(f"DEBUG: Starting match. Mode: {game_mode}, Network Client: {network_client}")
         while match_active:
             if game_mode == "MULTIPLAYER" and network_client is not None:
-                network_client.update()
+                server_state = network_client.update()
+            else:
+                server_state = None
             log_state()
 
             if wave_manager.wave_num >= 20 and current_theme != "Concrete":
@@ -134,23 +140,56 @@ def main():
                                 tower_x = event.pos[0] // CELL_SIZE
                                 tower_y = event.pos[1] // CELL_SIZE
                                 cell = game_map.grid[tower_y][tower_x]
-                                if cell.cell_type not in ("Road", "Start", "End") and (tower_x, tower_y) not in placed_towers:
+                                if game_mode == "MULTIPLAYER":
+                                    on_wrong_side = (local_side == "p1" and tower_x >= GRID_COLS // 2) or \
+                                                    (local_side == "p2" and tower_x < GRID_COLS // 2)
+                                else:
+                                    on_wrong_side = False
+                                if cell.cell_type not in ("Road", "Start", "End") and (tower_x, tower_y) not in placed_towers and not on_wrong_side:
                                     if selected_tower == "basic" and player.money >= 100:
-                                        Tower(tower_x, tower_y)
+                                        Tower(tower_x, tower_y, owner=local_side)
                                         player.money -= 100
                                         placed_towers.add((tower_x, tower_y))
+                                        if game_mode == "MULTIPLAYER":
+                                            network_client.send_data({
+                                                "action": "place_tower",
+                                                "tower_type": "basic",
+                                                "grid_x": tower_x,
+                                                "grid_y": tower_y
+                                            })
                                     elif selected_tower == "jt" and player.money >= 1000:
-                                        JTTower(tower_x, tower_y)
+                                        JTTower(tower_x, tower_y, owner=local_side)
                                         player.money -= 1000
                                         placed_towers.add((tower_x, tower_y))
+                                        if game_mode == "MULTIPLAYER":
+                                            network_client.send_data({
+                                                "action": "place_tower",
+                                                "tower_type": "jt",
+                                                "grid_x": tower_x,
+                                                "grid_y": tower_y
+                                            })
                                     elif selected_tower == "laser" and player.money >= 10000:
-                                        LaserTower(tower_x, tower_y)
+                                        LaserTower(tower_x, tower_y, owner=local_side)
                                         player.money -= 10000
                                         placed_towers.add((tower_x, tower_y))
+                                        if game_mode == "MULTIPLAYER":
+                                            network_client.send_data({
+                                                "action": "place_tower",
+                                                "tower_type": "laser",
+                                                "grid_x": tower_x,
+                                                "grid_y": tower_y
+                                            })
                                     elif selected_tower == "sniper" and player.money >= 100000:
-                                        SniperTower(tower_x, tower_y)
+                                        SniperTower(tower_x, tower_y, owner=local_side)
                                         player.money -= 100000
                                         placed_towers.add((tower_x, tower_y))
+                                        if game_mode == "MULTIPLAYER":
+                                            network_client.send_data({
+                                                "action": "place_tower",
+                                                "tower_type": "sniper",
+                                                "grid_x": tower_x,
+                                                "grid_y": tower_y
+                                            })
                                 else:
                                     invalid_placement_timer = 60
             if paused: 
@@ -199,6 +238,26 @@ def main():
 
             screen.fill("black")
             game_map.draw(screen)
+            if game_mode == "MULTIPLAYER":
+                center_x = (GRID_COLS // 2) * CELL_SIZE
+                pygame.draw.line(screen, (255, 255, 0), (center_x, 0), (center_x, SCREEN_HEIGHT), 2)
+            if server_state and "towers" in server_state:
+                for tower_data in server_state["towers"]:
+                    if tower_data["owner"] != network_client.player_id:
+                        tx = tower_data["grid_x"]
+                        ty = tower_data["grid_y"]
+                        tower_type = tower_data["type"]
+                        if (tx, ty) not in placed_towers:
+                            placed_towers.add((tx, ty))
+                            opponent_side = "p2" if local_side == "p1" else "p1"
+                            if tower_type == "basic":
+                                Tower(tx, ty, owner=opponent_side)
+                            elif tower_type == "jt":
+                                JTTower(tx, ty, owner=opponent_side)
+                            elif tower_type == "laser":
+                                LaserTower(tx, ty, owner=opponent_side)
+                            elif tower_type == "sniper":
+                                SniperTower(tx, ty, owner=opponent_side)
             ui_bar.draw(screen, selected_tower)
             wave_manager.update(dt, updateable, drawable, enemies)
             if p2_wave_manager:
