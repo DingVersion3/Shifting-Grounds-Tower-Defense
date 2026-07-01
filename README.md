@@ -1,4 +1,4 @@
-# Shifting Grounds Tower Defense v 0.4.2
+# Shifting Grounds Tower Defense v 0.4.3
 
 A procedurally generated tower defense game built with Python and Pygame.
 
@@ -109,13 +109,20 @@ If you are hosting a game for other players on the same network environment, use
     - beautify UI
     - find assets to beautify the map(trees, buildings, bushes, etc)
 - Multiplayer
-    - Finish implementation, structure and baseline is setup/buggy
+    - combat adjustments
+    - shot sync
+    - player disconnect handling/ clean up towers, etc when player disconnects
+    - make sure restarting from game over in multiplayer doesnt reset NetworkClient or reconnect to server
+    - identify which side is which visually
 - Potential Ideas(nothing in this area is guarnteed to be implemented but will be heavily considered)
   - create an executable with pyinstaller that compiles the entire project into one .exe file that you run verses the current setup. 
 
 ## Known Bugs
-- Enemies will randomly cut corners going along the path(edge case)
-- AI can't place towers down in multiplayer(I don't recommend using the AI at this current point in time)
+- Singleplayer
+  - Enemies will randomly cut corners going along the path(edge case)
+  - AI can't place towers down in multiplayer(I don't recommend using the AI at this current point in time)
+- Multiplayer
+  - Start/End cells currently overwrite each other. Hasn't caused issues yet but could potentially cause issues down the line
 
 ## Suggestions 
 
@@ -196,3 +203,14 @@ If you are hosting a game for other players on the same network environment, use
 - Singleplayer
   - Updates
     1. Rewritten logic for towers
+
+## Patch Notes v 0.4.3
+- Multiplayer
+  **Getting back into the flow after getting back from vacation, small bug fix updates for multiplayer coming in this patch, nothing particularly exciting. I''ve updated this readme to better communicate my plans with the project**
+  **Realising that how I ended up doing things with version numbers is not really how I'm actually working within this project. I currently don't have the desire to do the artwork for the main menu buttons and other things that would officially clean up the UI experience in the game. Once multiplayer is is confirmed to be working I will push to v0.5. From that point on I'll just be making UI adjustments and visual adjustments to make the game loop and experience as visually pleasing as I can make it. I'm giving myself a time frame to finish this project by August 1st. I'll officially stop working on the project at that point in time. Im starting to get carried away but I'm loving it at the same time so I don;t want to abandon ship quite yet. Excited to push through this last month on the project. Thanks for taking the time to play and read my jibber jabber**
+  - Bug Fixes
+    - Waves spawning server side correctly
+    - Game won't start until Player 2 joins
+    - Enemies spawn and move along the path on the server side,  client loads the image assets
+  Updates
+    - Visual to show which side belongs to Player 1 and Player 2

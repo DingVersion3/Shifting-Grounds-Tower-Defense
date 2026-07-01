@@ -35,6 +35,9 @@ class GameServer:
         # placeholder for shared global simulation engine tracking metrics
         self.game_state = {"players": {}, "enemies": [], "projectiles": [], "towers": []}
         self.player_id_counter = 0
+        self.p1_wave_manager = None
+        self.p2_wave_manager = None
+        self.server_map = None
 
     def run(self):
         # auth global simulation cycle
@@ -57,8 +60,24 @@ class GameServer:
             if elapsed < tick_time:
                 time.sleep(tick_time - elapsed)
 
+    def start_game(self):
+        from server.server_map import ServerMap
+        from server.mapgenerator import MapGenerator
+        from server.server_wave_manager import ServerWaveManager
+        from common.constants import GRID_COLS, GRID_ROWS
+        import random
+
+        random.seed(self.map_seed)
+        self.server_map = ServerMap(GRID_COLS, GRID_ROWS)
+        gen = MapGenerator(self.server_map.grid)
+        p1_path, p2_path = gen.generate_multiplayer_path()
+
+        self.p1_wave_manager = ServerWaveManager(p1_path, "p1")
+        self.p2_wave_manager = ServerWaveManager(p2_path, "p2")
+        print("[SERVER] Game started. Wave managers initialized.")
+
     def process_network_traffic(self):
-        read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list, 0.1)
+        read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list, 0)
         for notified_socket in read_sockets:
             if notified_socket == self.server_socket:
                 client_socket, client_address = self.server_socket.accept()
@@ -86,6 +105,8 @@ class GameServer:
                 }) + "\n"
                 client_socket.sendall(handshake.encode('utf-8'))
                 print(f"[SERVER] Handshake sent to {client_address}. ID: {p_id}, Side: {side}, Seed: {self.map_seed}")
+                if self.player_id_counter == 2:
+                    self.start_game()
 
             else:
                 try:
@@ -124,41 +145,24 @@ class GameServer:
             print(f"[SERVER] {player_id} built a {tower_type} at ({grid_x, grid_y})")
 
     def update_game_world(self, dt):
-        enemies = self.game_state["enemies"]
-        projectiles = self.game_state["projectiles"]
+        if self.p1_wave_manager is None or self.p2_wave_manager is None:
+            return
 
-        # if this is the first tick, set up our arrays
-        if not hasattr(self, "active towers"):
-            self.active_towers = []
+        self.p1_wave_manager.update(dt)
+        self.p2_wave_manager.update(dt)
 
-            for tower in self.active_towers:
-                tower.update(dt, enemies, projectiles)
+        # Check combat between p1 and p2 enemies
+        for e1 in self.p1_wave_manager.enemies:
+            for e2 in self.p2_wave_manager.enemies:
+                if not e1.in_combat and not e2.in_combat:
+                    if abs(e1.x - e2.x) < 0.5 and abs(e1.y - e2.y) < 0.5:
+                        e1.in_combat = True
+                        e1.combat_target = e2
+                        e2.in_combat = True
+                        e2.combat_target = e1
 
-            for shot in list(projectiles):
-                # find enemy in target queue
-                target_enemy = next((e for e in enemies if e["id"] == shot["target_enemy_id"]), None)
-
-                if target_enemy:
-                    # move shot towards coords
-                    dx = target_enemy["x"] - shot["x"]
-                    dy = target_enemy["y"] - shot["y"]
-                    distance = math.sqrt(dx**2 + dy**2)
-
-                    if distance > 0.2:
-                        shot["x"] += (dx / distance) * shot["speed"] * dt
-                        shot["y"] += (dy / distance) * shot["speed"] * dt
-                    else:
-                        target_enemy["hp"] -= shot["damage"]
-                        if shot in projectiles:
-                            projectiles.remove(shot)
-
-                        if target_enemy["hp"] <= 0:
-                            if target_enemy in enemies:
-                                enemies.remove(target_enemy)
-                                print(f"[SERVER] Enemy neutralized. Giving out gold.")
-                            else:
-                                if shot in projectiles:
-                                    projectiles.remove(shot)
+        all_enemies = self.p1_wave_manager.enemies + self.p2_wave_manager.enemies
+        self.game_state["enemies"] = [e.to_dict() for e in all_enemies]
 
 
 

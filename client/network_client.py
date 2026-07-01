@@ -9,6 +9,7 @@ class NetworkClient:
         self.player_id = None
         self.side = None
         self.map_seed = None
+        self.recv_buffer = ""
 
     def start_connection(self, ip_address):
         try:
@@ -44,24 +45,29 @@ class NetworkClient:
             print(f"[NETWORK] Transmission error: {e}")
             self.is_connected = False
 
+
     def update(self):
-        # pumps network data, listens for server broadcasts without pausing the main loop
         if not self.is_connected:
             return None
+        latest_state = None
         try:
-            # peek inside the network stream buffer
-            raw_data = self.client.recv(4096).decode('utf-8')
-            if not raw_data:
-                return None
-            # decode incoming string payload back to python
-            game_state = json.loads(raw_data.strip())
-            return game_state
+            while True:
+                raw_data = self.client.recv(8192).decode('utf-8')
+                if not raw_data:
+                    break
+                self.recv_buffer += raw_data
+                while '\n' in self.recv_buffer:
+                    line, self.recv_buffer = self.recv_buffer.split('\n', 1)
+                    if line:
+                        try:
+                            latest_state = json.loads(line)
+                        except Exception as e:
+                            print(f"DEBUG json parse fail: {e}")
         except BlockingIOError:
-            # server hasnt sent any new packets during the specific 1/60th of a second frame
-            return None
+            pass
         except Exception as e:
             print(f"[NETWORK] Connection lost from the host: {e}")
             self.is_connected = False
-            return None
+        return latest_state
         
             

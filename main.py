@@ -1,5 +1,6 @@
 import sys
 import os
+import math
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -9,7 +10,7 @@ from logger import log_state
 from entities.tower import Tower, JTTower, LaserTower, SniperTower
 from common.map import Map
 from server.mapgenerator import MapGenerator
-from entities.enemy import Enemy
+from entities.enemy import Enemy, Tank, Airplane
 from server.wave_manager import WaveManager
 from entities.shot import Shot, Rocket, Laser
 from entities.player import Player
@@ -18,6 +19,35 @@ from ui_states.ui import UIBar
 from ui_states.mainmenu import MainMenu, MultiplayerMenu
 from client.network_client import NetworkClient
 
+
+class EnemyAssets:
+    def __init__(self):
+        self.cache = {}
+
+    def get(self, wave_num):
+        if wave_num not in self.cache:
+            enemy_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile245.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+            plane_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile270.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+            body_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile268.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+            turret_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile291.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+
+            if wave_num >= 10 and wave_num < 20:
+                enemy_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile246.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+            elif wave_num >= 50 and wave_num < 75:
+                enemy_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile247.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+                body_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile269.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+                turret_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile292.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+            elif wave_num >= 75:
+                enemy_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile248.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+                plane_img = pygame.transform.scale(pygame.image.load("assets/towerDefense_tile271.png").convert_alpha(), (CELL_SIZE, CELL_SIZE))
+
+            self.cache[wave_num] = {
+                "enemy": enemy_img,
+                "plane": plane_img,
+                "tank_body": body_img,
+                "tank_turret": turret_img
+            }
+        return self.cache[wave_num]
 
 def main():
     pygame.init()
@@ -67,6 +97,8 @@ def main():
         paused = False
         selected_tower = None
         placed_towers = set()
+        active_enemy_sprites = {}
+        enemy_assets = EnemyAssets()
 
         updateable = pygame.sprite.Group()
         drawable = pygame.sprite.Group()
@@ -241,6 +273,13 @@ def main():
             if game_mode == "MULTIPLAYER":
                 center_x = (GRID_COLS // 2) * CELL_SIZE
                 pygame.draw.line(screen, (255, 255, 0), (center_x, 0), (center_x, SCREEN_HEIGHT), 2)
+                side_font = pygame.Font('assets/Fonts/Kenney_Future_Narrow.ttf', 24)
+                p1_color = (0, 255, 0) if local_side == "p1" else (255, 255, 255)
+                p2_color = (0, 255, 0) if local_side == "p2" else (255, 255, 255)
+                p1_label = side_font.render("P1 (YOU)" if local_side == "p1" else "P1", True, p1_color)
+                p2_label = side_font.render("P2 (YOU)" if local_side == "p2" else "P2", True, p2_color)
+                screen.blit(p1_label, (center_x // 2 - p1_label.get_width() // 2, 10))
+                screen.blit(p2_label, (center_x + center_x // 2 - p2_label.get_width() // 2, 10))
             if server_state and "towers" in server_state:
                 for tower_data in server_state["towers"]:
                     if tower_data["owner"] != network_client.player_id:
@@ -259,9 +298,53 @@ def main():
                             elif tower_type == "sniper":
                                 SniperTower(tx, ty, owner=opponent_side)
             ui_bar.draw(screen, selected_tower)
-            wave_manager.update(dt, updateable, drawable, enemies)
-            if p2_wave_manager:
-                p2_wave_manager.update(dt, updateable, drawable, enemies)
+            if game_mode == "MULTIPLAYER":
+                if server_state and "enemies" in server_state:
+                    current_ids = set()
+                    for enemy_data in server_state["enemies"]:
+                        eid = enemy_data["id"]
+                        current_ids.add(eid)
+                        if eid not in active_enemy_sprites:
+                            enemy_type = enemy_data["type"]
+                            wave_num = enemy_data.get("wave_num", 1)
+                            assets = enemy_assets.get(wave_num)
+                            x = enemy_data["x"]
+                            y = enemy_data["y"]
+                            owner = enemy_data["owner"]
+                            if enemy_type == "tank":
+                                Tank.containers = (drawable, enemies)
+                                sprite = Tank(health=1, speed=1, x=x, y=y, path_index=0, damage=0,
+                                            path_cells=[], body_image=assets["tank_body"],
+                                            turret_image=assets["tank_turret"], owner=owner)
+                            elif enemy_type == "airplane":
+                                Airplane.containers = (drawable, enemies)
+                                sprite = Airplane(health=1, speed=1, x=x, y=y, path_index=0, damage=0,
+                                                path_cells=[], image=assets["plane"], owner=owner)
+                            else:
+                                Enemy.containers = (drawable, enemies)
+                                sprite = Enemy(health=1, speed=1, x=x, y=y, path_index=0, damage=0,
+                                            path_cells=[], image=assets["enemy"], owner=owner)
+                            active_enemy_sprites[eid] = sprite
+                        else:
+                            sprite = active_enemy_sprites[eid]
+                            prev_x = sprite.position.x
+                            prev_y = sprite.position.y
+                            sprite.position.x = enemy_data["x"]
+                            sprite.position.y = enemy_data["y"]
+                            sprite.health = enemy_data["health"]
+
+                            dx = sprite.position.x - prev_x
+                            dy = sprite.position.y - prev_y
+                            if dx != 0 or dy != 0:
+                                sprite.angle = math.degrees(math.atan2(-dy, dx))
+                                sprite.rotate_assets()
+
+                    for eid in list(active_enemy_sprites.keys()):
+                        if eid not in current_ids:
+                            active_enemy_sprites[eid].kill()
+                            del active_enemy_sprites[eid]
+            else:
+                wave_manager.update(dt, updateable, drawable, enemies)
 
             for draws in drawable:
                 draws.draw(screen)
